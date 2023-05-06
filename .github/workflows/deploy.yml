@@ -1,0 +1,22 @@
+name: Build and Deploy
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v2
+        with:
+          ref: main
+      - name: Install dependencies
+        run: npm install
+      - name: Build website
+        run: npm run build
+      - name: Deploy website
+        uses: JamesIves/github-pages-deploy-action@v4 # replace with the version of your choice
+        with:
+          branch: gh-pages
+          folder: ./public # replace with the path to your generated HTML and CSS files
