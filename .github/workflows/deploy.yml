@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - main
+permissions:
+  contents: write
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -15,8 +17,8 @@ jobs:
         run: npm install
       - name: Build website
         run: npm run build
-      - name: Deploy website
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Deploy to Github Pages
+        uses: JamesIves/github-pages-deploy-action@v4.4.1
         with:
           branch: main
           folder: ./public
