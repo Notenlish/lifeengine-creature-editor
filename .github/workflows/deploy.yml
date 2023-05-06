@@ -16,7 +16,7 @@ jobs:
       - name: Build website
         run: npm run build
       - name: Deploy website
-        uses: JamesIves/github-pages-deploy-action@v4 # replace with the version of your choice
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          branch: gh-pages
-          folder: ./public # replace with the path to your generated HTML and CSS files
+          branch: main
+          folder: ./public
