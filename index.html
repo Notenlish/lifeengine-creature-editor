@@ -6,12 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta keyword="The Life Engine, LifeEngine, Life Engine, life engine, lifeengine, evolution simulator, The Life Engine editor">
     <meta description="Organism Editor is a tool you can use to create organisms to use in The Life Engine.">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="src/css/style.css">
     <title>Organism Editor</title>
-    <script defer src="js/editor.js"></script>
+    <script defer src="src/js/editor.js"></script>
 </head>
 <body>
-    <div>Hello!</div>
+    <main>
+        <h1>Organism Editor</h1>
+        <div class="editor">
+            <div class="canvas-container">
+                <canvas width="500" height="500"></canvas>
+            </div>
+            <div class="editor-setting">
+                <div class="editor-button" data-cell="mouth">
+                </div>
+                <div class="editor-button" data-cell="producer">
+                </div>
+                <div class="editor-button" data-cell="mover">
+                </div>
+                <div class="editor-button" data-cell="killer">
+                </div>
+                <div class="editor-button" data-cell="armor">
+                </div>
+                <div class="editor-button" data-cell="eye">
+                </div>
+            </div>
+        </div>
+    </main>
 </body>
 </html>
 

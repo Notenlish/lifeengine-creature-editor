@@ -1,0 +1,62 @@
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+main {
+    display: flex;
+    justify-items: center;
+    flex-direction: column;
+}
+
+h1 {
+    text-align: center;
+    margin: 0.8rem;
+}
+
+.editor {
+    display: flex;
+    justify-content: space-evenly   ;
+}
+
+.editor-setting {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.editor-button {
+    width: 100px;
+    height: 100px;
+}
+
+.editor-button[data-cell="mouth"] {
+    background-color: #DEB14D;
+}
+.editor-button[data-cell="producer"] {
+    background-color: #15DE59;
+}
+.editor-button[data-cell="mover"] {
+    background-color: #60D4FF;
+}
+.editor-button[data-cell="killer"] {
+    background-color: #F82380;
+}
+.editor-button[data-cell="armor"] {
+    background-color: #7230DB;
+}
+.editor-button[data-cell="eye"] {
+    background-color: #B7C1EA;
+}
+
+.canvas-container {
+    width: 60%;
+    height: 100%;
+    background-color: #416788;
+    overflow: hidden;
+}
+
+canvas {
+    position: relative;
+}
