@@ -54,6 +54,18 @@ h1 {
     background-color: #B7C1EA;
 }
 
+.editor-button[data-cell="remove"] {
+    background-color: transparent;
+}
+
+.editor-button[data-cell="remove"]::before {
+    content: '';
+    position: absolute;
+    background-color: red;
+    width: 100px;
+    height: 100px;
+}
+
 .canvas-container {
     width: 60%;
     height: 100%;

@@ -1,77 +1,11 @@
 let canvas = document.getElementsByTagName("canvas")[0];
 let canvasContainer = document.getElementsByClassName("canvas-container")[0] 
 let ctx = canvas.getContext("2d");
-let cameraX = 0;
-let cameraY = 0;
-let cellSize = 40;
-let holding = false;
+let cameraX = 0
+let cameraY = 0
+let cellSize = 40
+let holding = false
 let currentCellType = "producer"
-
-
-let dragstartX
-let dragstartY
-canvasContainer.addEventListener("mousedown", (event) => {
-    if (event.button != 1) {
-        return
-    }
-    dragstartX = event.clientX
-    dragstartY = event.clientY
-    document.addEventListener("mousemove", onMouseMove)
-    document.addEventListener("mouseup", onMouseUp)
-});
-let cellButtons = document.getElementsByClassName("editor-button")
-for (i = 0; i < cellButtons.length; i++) {
-    let cellButton = cellButtons[i]
-    cellButton.addEventListener("mousedown", (event) => {
-        if (event.button != 0) {
-            return
-        }
-        for (i=0; i < cellButtons.length; i++) {
-            let otherCell = cellButtons[i]
-            delete otherCell.dataset.active
-            console.log(otherCell)
-        }
-        cellButton.dataset.active = ""
-        currentCellType = cellButton.dataset.cell
-    })
-}
-
-
-function onMouseMove(event) {
-    let draggedX = event.clientX - dragstartX
-    let draggedY = event.clientY - dragstartY
-    dragstartX = event.clientX
-    dragstartY = event.clientY
-    cameraX -= draggedX
-    cameraY += draggedY
-    canvas.style.top = `${cameraY}px`
-    canvas.style.right = `${cameraX}px`
-}
-function onMouseUp(event) {
-    dragstartX = event.clientX
-    dragstartY = event.clientY
-    document.removeEventListener("mousemove", onMouseMove)
-    document.removeEventListener("mouseup", onMouseUp)
-}
-
-canvas.addEventListener("mousedown", (event) => {
-    if (event.button != 0) {
-        return
-    }
-    let canvasRect = canvas.getBoundingClientRect();
-    let x = event.clientX - canvasRect.left
-    let y = event.clientY - canvasRect.top
-    let tileX = Math.round((x / cellSize)-0.5)
-    let tileY = Math.round((y / cellSize)-0.5)
-    console.log(x,y,tileX,tileY)
-    let cell = { }
-    cell["loc_col"] = tileY
-    cell["loc_row"] = tileX
-    cell["state"] = {"name":currentCellType}
-    organism.anatomy.cells.push(cell)
-    drawCells()
-    updateGraph()
-})
 
 const CELL_NAMES = {
     "producer":"green",
@@ -109,7 +43,7 @@ let organism = {
         "is_producer":true,
         "is_mover":false,
         "has_eyes":true,
-        "cells":[{"loc_col":1,"loc_row":1,"state":{"name":"producer"}},{"loc_col":1,"loc_row":2,"state":{"name":"mouth"}}]
+        "cells":[{"loc_col":1,"loc_row":1,"state":{"name":"producer"}}, {"loc_col":1,"loc_row":2,"state":{"name":"mouth"}}]
     },
     "species_name":""
 }
@@ -117,14 +51,89 @@ let organism = {
 // {"loc_col":1,"loc_row":1,"state":{"name":"producer"}}
 // producer, mouth, killer, mover, eye, armor
 
+let dragstartX
+let dragstartY
+canvasContainer.addEventListener("mousedown", (event) => {
+    if (event.button != 1) {
+        return
+    }
+    dragstartX = event.clientX
+    dragstartY = event.clientY
+    document.addEventListener("mousemove", onMouseMove)
+    document.addEventListener("mouseup", onMouseUp)
+})
+
+let cellButtons = document.getElementsByClassName("editor-button")
+for (i = 0; i < cellButtons.length; i++) {
+    let cellButton = cellButtons[i]
+    cellButton.addEventListener("mousedown", (event) => {
+        if (event.button != 0) {
+            return
+        }
+        for (i=0; i < cellButtons.length; i++) {
+            let otherCell = cellButtons[i]
+            delete otherCell.dataset.active
+        }
+        cellButton.dataset.active = ""
+        currentCellType = cellButton.dataset.cell
+    })
+}
+
+
+function onMouseMove(event) {
+    let draggedX = event.clientX - dragstartX
+    let draggedY = event.clientY - dragstartY
+    dragstartX = event.clientX
+    dragstartY = event.clientY
+    cameraX -= draggedX
+    cameraY += draggedY
+    canvas.style.top = `${cameraY}px`
+    canvas.style.right = `${cameraX}px`
+}
+function onMouseUp(event) {
+    dragstartX = event.clientX
+    dragstartY = event.clientY
+    document.removeEventListener("mousemove", onMouseMove)
+    document.removeEventListener("mouseup", onMouseUp)
+}
+
+canvas.addEventListener("mousedown", (event) => {
+    if (event.button != 0) {
+        return
+    }
+    let canvasRect = canvas.getBoundingClientRect()
+    let x = event.clientX - canvasRect.left
+    let y = event.clientY - canvasRect.top
+    let tileX = Math.round((x / cellSize)-0.5)
+    let tileY = Math.round((y / cellSize)-0.5)
+    let cell = { }
+    cell["loc_col"] = tileY
+    cell["loc_row"] = tileX
+    cell["state"] = {}
+    if (currentCellType != "remove") {
+        cell["state"] = {"name":currentCellType}
+    } else {
+        for (i = 0; i < Object.keys(CELL_NAMES).length; i++) {
+            cell["state"]["name"] = Object.keys(CELL_NAMES)[i]
+            const cellIndex = organism.anatomy.cells.indexOf(cell)
+            if (cellIndex != -1) {
+                organism.anatomy.cells.splice(cellIndex, 1)
+            }        
+        }
+    }
+    organism.anatomy.cells.push(cell)
+    drawCells()
+    updateGraph()
+})
+
 function drawCells() {
     ctx.fillStyle = "white"
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
     let cellLength = organism.anatomy.cells.length
     for (let index = 0; index < cellLength; index++) {
         cell = organism.anatomy.cells[index]
-        let colorname = CELL_NAMES[cell.state.name]
-        ctx.fillStyle = COLORS[colorname]
+        let colorName = CELL_NAMES[cell.state.name]
+        ctx.fillStyle = COLORS[colorName]
         let cellX = cell.loc_row * cellSize // - cameraX
         let cellY = cell.loc_col * cellSize // - cameraY
         ctx.fillRect(cellX, cellY, cellSize, cellSize)
