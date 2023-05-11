@@ -1,10 +1,9 @@
 # organism-editor
  Organism editor for The Life Engine
 
-# How to 
+# How to Use
+ Just open https://notenlish.github.io/organism-editor.github.io/ .
 
-# Installation
- Clone the repo and open the index.html file in your browser.
-
-# Why So Simple?
- I tried to link it with npm but ultimately decided to just keep it simple.
+# Notes
+There are more stuff I want to add and I want to just clean up the whole structure and use npm.
+I hope you like it, you can even contribute to it if you want!
