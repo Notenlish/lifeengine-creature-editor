@@ -29,8 +29,12 @@ h1 {
 .editor-button {
     width: 100px;
     height: 100px;
+    border: 2px solid black;
 }
 
+.editor-button[data-active] {
+    border: 2px solid white;
+}
 .editor-button[data-cell="mouth"] {
     background-color: #DEB14D;
 }

@@ -19,13 +19,29 @@ canvasContainer.addEventListener("mousedown", (event) => {
     document.addEventListener("mousemove", onMouseMove)
     document.addEventListener("mouseup", onMouseUp)
 });
+let cellButtons = document.getElementsByClassName("editor-button")
+for (i = 0; i < cellButtons.length; i++) {
+    let cellButton = cellButtons[i]
+    cellButton.addEventListener("mousedown", (event) => {
+        if (event.button != 0) {
+            return
+        }
+        for (i=0; i < cellButtons.length; i++) {
+            let otherCell = cellButtons[i]
+            delete otherCell.dataset.active
+            console.log(otherCell)
+        }
+        cellButton.dataset.active = ""
+        currentCellType = cellButton.dataset.cell
+    })
+}
+
 
 function onMouseMove(event) {
     let draggedX = event.clientX - dragstartX
     let draggedY = event.clientY - dragstartY
     dragstartX = event.clientX
     dragstartY = event.clientY
-    //console.log(`Dragged ${draggedX}px horizontally and ${draggedY}px vertically`)
     cameraX -= draggedX
     cameraY += draggedY
     canvas.style.top = `${cameraY}px`
@@ -53,14 +69,6 @@ canvas.addEventListener("mousedown", (event) => {
     cell["loc_row"] = tileX
     cell["state"] = {"name":currentCellType}
     organism.anatomy.cells.push(cell)
-    console.log("ada")
-    
-    if (currentCellType == "producer") {
-        currentCellType = "mouth"
-    } else {
-        currentCellType = "producer"
-    }
-
     drawCells()
     updateGraph()
 })
