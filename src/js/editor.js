@@ -7,6 +7,10 @@ let cellSize = 40
 let holding = false
 let currentCellType = "producer"
 
+// I shouldnt forget to update this when resizing the canvas
+let halfGridWidth = Math.round((canvas.width / 4) / cellSize)
+let halfGridHeight = Math.round((canvas.height / 4) / cellSize)
+
 const CELL_NAMES = {
     "producer":"green",
     "mouth":"orange",
@@ -15,6 +19,7 @@ const CELL_NAMES = {
     "eye":"grey",
     "armor":"purple"
 }
+
 const COLORS = {
     "orange":"#DEB14D",
     "green": "#15DE59",
@@ -22,8 +27,10 @@ const COLORS = {
     "grey":"#B7C1EA",
     "purple":"#7230DB",
     "blue":"#60D4FF",
-    "black":"#000"
+    "black":"#000",
+    "gray":"#333"
 }
+
 let organism = {
     "c":7,
     "r":7,
@@ -43,13 +50,56 @@ let organism = {
         "is_producer":true,
         "is_mover":false,
         "has_eyes":true,
-        "cells":[{"loc_col":1,"loc_row":1,"state":{"name":"producer"}}, {"loc_col":1,"loc_row":2,"state":{"name":"mouth"}}]
+        "cells":[]
     },
     "species_name":""
 }
 
-// {"loc_col":1,"loc_row":1,"state":{"name":"producer"}}
-// producer, mouth, killer, mover, eye, armor
+let exportButton = document.getElementsByClassName("jsonexport")[0]
+function exportToJsonFile() {
+    // my rendering way/ loading way is not aligned to the way life engine works but whatever this works too
+    let organismToExport = JSON.parse(JSON.stringify(organism))
+    for (i = 0; i < organismToExport.anatomy.cells.length; i++) {
+        organismToExport.anatomy.cells[i].loc_col *= -1
+        organismToExport.anatomy.cells[i].loc_row *= -1 
+    }
+    let dataStr = JSON.stringify(organismToExport);
+    let dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    let exportFileDefaultName = 'data.json';
+    let exportButton = document.getElementsByClassName("jsonexport")[0]
+    exportButton.setAttribute('href', dataUri);
+    exportButton.setAttribute('download', exportFileDefaultName);
+}
+
+let form = document.querySelector('#upload');
+let file = document.querySelector('#file');
+form.addEventListener('submit', importJson);
+
+function parseFile (event) {
+	let str = event.target.result
+	let json = JSON.parse(str)
+    organism = json
+
+    // for some reason the organisms are flipped so i have to fix it ig?
+    for (i = 0; i < organism.anatomy.cells.length; i++) {
+        let oldY = organism.anatomy.cells[i].loc_col
+        let oldX = organism.anatomy.cells[i].loc_row
+        organism.anatomy.cells[i].loc_row = oldY
+        organism.anatomy.cells[i].loc_col = oldX
+    }
+
+    console.log(organism)
+    drawCells()
+    updateGraph()
+}
+
+function importJson(event) {
+    event.preventDefault()
+    if (!file.value.length) return
+    let reader = new FileReader()
+    reader.onload = parseFile
+	reader.readAsText(file.files[0])
+}
 
 let dragstartX
 let dragstartY
@@ -63,7 +113,7 @@ canvasContainer.addEventListener("mousedown", (event) => {
     document.addEventListener("mouseup", onMouseUp)
 })
 
-let cellButtons = document.getElementsByClassName("editor-button")
+let cellButtons = document.getElementsByClassName("editor-cellbutton")
 for (i = 0; i < cellButtons.length; i++) {
     let cellButton = cellButtons[i]
     cellButton.addEventListener("mousedown", (event) => {
@@ -104,75 +154,91 @@ canvas.addEventListener("mousedown", (event) => {
     let canvasRect = canvas.getBoundingClientRect()
     let x = event.clientX - canvasRect.left
     let y = event.clientY - canvasRect.top
-    let tileX = Math.round((x / cellSize)-0.5)
-    let tileY = Math.round((y / cellSize)-0.5)
+    let tileX = Math.round((x / cellSize)-0.5) - Math.round(halfGridWidth*2)
+    let tileY = Math.round((y / cellSize)-0.5) - Math.round(halfGridHeight*2)
+    console.log(tileX, tileY)
     let cell = { }
     cell["loc_col"] = tileY
     cell["loc_row"] = tileX
     cell["state"] = {}
     if (currentCellType != "remove") {
         cell["state"] = {"name":currentCellType}
+        organism.anatomy.cells.push(cell)
     } else {
-        for (i = 0; i < Object.keys(CELL_NAMES).length; i++) {
-            cell["state"]["name"] = Object.keys(CELL_NAMES)[i]
-            const cellIndex = organism.anatomy.cells.indexOf(cell)
-            if (cellIndex != -1) {
-                organism.anatomy.cells.splice(cellIndex, 1)
-            }        
+        for (i = 0; i < organism.anatomy.cells.length; i++) {
+            let c = organism.anatomy.cells[i]
+            if (c.loc_col == tileY && c.loc_row == tileX) {
+                organism.anatomy.cells.splice(i, 1)
+            }
         }
     }
-    organism.anatomy.cells.push(cell)
     drawCells()
     updateGraph()
 })
 
 function drawCells() {
-    ctx.fillStyle = "white"
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
-    let cellLength = organism.anatomy.cells.length
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = COLORS.gray;
+    let middleX = Math.round(canvas.width / (2 * cellSize)) * cellSize;
+    let middleY = Math.round(canvas.height / (2 * cellSize)) * cellSize;
+    ctx.fillRect(middleX, middleY, cellSize, cellSize);
+
+    let cellLength = organism.anatomy.cells.length;
     for (let index = 0; index < cellLength; index++) {
-        cell = organism.anatomy.cells[index]
-        let colorName = CELL_NAMES[cell.state.name]
-        ctx.fillStyle = COLORS[colorName]
-        let cellX = cell.loc_row * cellSize // - cameraX
-        let cellY = cell.loc_col * cellSize // - cameraY
-        ctx.fillRect(cellX, cellY, cellSize, cellSize)
+        let cell = organism.anatomy.cells[index];
+        let colorName = CELL_NAMES[cell.state.name];
+        ctx.fillStyle = COLORS[colorName];
+        let cellX = cell.loc_row * cellSize + (halfGridWidth * 2 * cellSize);  // - cameraX
+        let cellY = cell.loc_col * cellSize + (halfGridHeight * 2 * cellSize); // - cameraY
+        ctx.fillRect(cellX, cellY, cellSize, cellSize);
     }
+
+    ctx.fillStyle = "#555"
+    ctx.beginPath();
+    ctx.arc(middleX + (cellSize / 2), middleY + (cellSize / 2), cellSize * 0.3, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.closePath();
 }
+
+
 function updateGraph() {
-    let top_corners = []
-    let bottom_corners = []
-    let left_corners = []
-    let right_corners = []
-    let startX = 0 // canvas.width % cellSize
+    let top_corners = [];
+    let bottom_corners = [];
+    let left_corners = [];
+    let right_corners = [];
+    let startX = 0; // canvas.width % cellSize
     for (let x = startX; x < canvas.width; x += cellSize) {
-        top_corners.push([x, 0])
-        bottom_corners.push([x, canvas.height])
+        top_corners.push([x, 0]);
+        bottom_corners.push([x, canvas.height]);
     }
-    let startY = 0 // canvas.height % cellSize
+    let startY = 0; // canvas.height % cellSize
     for (let y = startY; y < canvas.height; y += cellSize) {
-        left_corners.push([0, y])
-        right_corners.push([canvas.width, y])
+        left_corners.push([0, y]);
+        right_corners.push([canvas.width, y]);
     }
-    ctx.strokeStyle = COLORS["black"]  // ctx.fillStyle
+    ctx.strokeStyle = COLORS["black"];  // ctx.fillStyle
+    ctx.beginPath();
     for (let index = 0; index < top_corners.length; index += 1) {
-        let coord1
-        let coord2
-        coord1 = top_corners[index]
-        coord2 = bottom_corners[index]
-        ctx.moveTo(coord1[0], coord1[1])
-        ctx.lineTo(coord2[0], coord2[1])
-        ctx.stroke()
+        let coord1;
+        let coord2;
+        coord1 = top_corners[index];
+        coord2 = bottom_corners[index];
+        ctx.moveTo(coord1[0], coord1[1]);
+        ctx.lineTo(coord2[0], coord2[1]);
+        ctx.stroke();
     }
     for (let index = 0; index < left_corners.length; index += 1) {
-        let coord1
-        let coord2
-        coord1 = right_corners[index]
-        coord2 = left_corners[index]
-        ctx.moveTo(coord1[0], coord1[1])
-        ctx.lineTo(coord2[0], coord2[1])
-        ctx.stroke()
+        let coord1;
+        let coord2;
+        coord1 = left_corners[index];
+        coord2 = right_corners[index];
+        ctx.moveTo(coord1[0], coord1[1]);
+        ctx.lineTo(coord2[0], coord2[1]);
+        ctx.stroke();
     }
+    ctx.closePath();
 }
 
 drawCells()

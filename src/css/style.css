@@ -17,57 +17,104 @@ h1 {
 
 .editor {
     display: flex;
-    justify-content: space-evenly   ;
+    justify-content: space-around;
 }
 
-.editor-setting {
+.editor-button {
+    padding: 1rem;
+    margin: 1rem;
+    background-color: #9099c2;
+    border-radius: 1rem;
+}
+
+.editor-button-wrapper {
+    display: flex;
+}
+
+.jsonexport {
+    width: 2rem;
+    height: 2rem;
+}
+
+.jsonexport img {
+    width: 2rem;
+    height: 2rem;
+    background-color: #9099c2;
+}
+
+.jsonimport {
+    width: 20rem;
+    height: 5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+}
+
+.jsonimport button {
+    padding-block: 0.1rem;
+    padding-inline: 1rem;
+    margin: 0;
+    width: min-content;
+}
+
+.editor-cellbutton-wrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
 }
 
-.editor-button {
+.editor-cellbutton {
     width: 100px;
     height: 100px;
     border: 2px solid black;
 }
 
-.editor-button[data-active] {
+.editor-cellbutton[data-active] {
     border: 2px solid white;
 }
-.editor-button[data-cell="mouth"] {
+.editor-cellbutton[data-cell="mouth"] {
     background-color: #DEB14D;
 }
-.editor-button[data-cell="producer"] {
+.editor-cellbutton[data-cell="producer"] {
     background-color: #15DE59;
 }
-.editor-button[data-cell="mover"] {
+.editor-cellbutton[data-cell="mover"] {
     background-color: #60D4FF;
 }
-.editor-button[data-cell="killer"] {
+.editor-cellbutton[data-cell="killer"] {
     background-color: #F82380;
 }
-.editor-button[data-cell="armor"] {
+.editor-cellbutton[data-cell="armor"] {
     background-color: #7230DB;
 }
-.editor-button[data-cell="eye"] {
+.editor-cellbutton[data-cell="eye"] {
     background-color: #B7C1EA;
 }
 
-.editor-button[data-cell="remove"] {
+.editor-cellbutton[data-cell="remove"] {
     background-color: transparent;
+    overflow: hidden;
 }
 
-.editor-button[data-cell="remove"]::before {
+.editor-cellbutton[data-cell="remove"]::before {
     content: '';
     position: absolute;
     background-color: red;
-    width: 100px;
-    height: 100px;
+    width: 75px;
+    height: 5px;
+    transform: translate(12.5px, 50px) rotateZ(45deg);
+}
+.editor-cellbutton[data-cell="remove"]::after {
+    content: '';
+    position: absolute;
+    background-color: red;
+    width: 75px;
+    height: 5px;
+    transform: translate(12.5px, 50px) rotateZ(-45deg);
 }
 
 .canvas-container {
-    width: 60%;
+    width: 55%;
     height: 100%;
     background-color: #416788;
     overflow: hidden;
