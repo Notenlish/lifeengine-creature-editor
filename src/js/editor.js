@@ -58,10 +58,13 @@ let organism = {
 let exportButton = document.getElementsByClassName("jsonexport")[0]
 function exportToJsonFile() {
     // my rendering way/ loading way is not aligned to the way life engine works but whatever this works too
-    let organismToExport = JSON.parse(JSON.stringify(organism))
+    let organismToExport = JSON.parse(JSON.stringify(organism))  // deep copy
+    
     for (i = 0; i < organismToExport.anatomy.cells.length; i++) {
-        organismToExport.anatomy.cells[i].loc_col *= -1
-        organismToExport.anatomy.cells[i].loc_row *= -1 
+        let oldY = organismToExport.anatomy.cells[i].loc_col
+        let oldX = organismToExport.anatomy.cells[i].loc_row
+        organismToExport.anatomy.cells[i].loc_row = oldY
+        organismToExport.anatomy.cells[i].loc_col = oldX
     }
     let dataStr = JSON.stringify(organismToExport);
     let dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
