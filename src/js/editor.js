@@ -1,6 +1,7 @@
-let canvas = document.getElementsByTagName("canvas")[0];
-let canvasContainer = document.getElementsByClassName("canvas-container")[0] 
-let ctx = canvas.getContext("2d");
+const canvas = document.getElementsByTagName("canvas")[0];
+const canvasContainer = document.querySelector(".canvas-container");
+const ctx = canvas.getContext("2d");
+const exportBtn = document.querySelector(".jsonexport");
 let cameraX = 0
 let cameraY = 0
 let cellSize = 40
@@ -55,23 +56,52 @@ let organism = {
     "species_name":""
 }
 
-let exportButton = document.getElementsByClassName("jsonexport")[0]
-function exportToJsonFile() {
-    // my rendering way/ loading way is not aligned to the way life engine works but whatever this works too
-    let organismToExport = JSON.parse(JSON.stringify(organism))  // deep copy
-    
-    for (i = 0; i < organismToExport.anatomy.cells.length; i++) {
-        let oldY = organismToExport.anatomy.cells[i].loc_col
-        let oldX = organismToExport.anatomy.cells[i].loc_row
-        organismToExport.anatomy.cells[i].loc_row = oldY
-        organismToExport.anatomy.cells[i].loc_col = oldX
+// for some reason the organisms are flipped so i have to fix it ig?
+function flipOrganism(org) {
+    for (i = 0; i < org.anatomy.cells.length; i++) {
+        let oldY = org.anatomy.cells[i].loc_col
+        let oldX = org.anatomy.cells[i].loc_row
+        org.anatomy.cells[i].loc_row = oldY
+        org.anatomy.cells[i].loc_col = oldX
     }
+    return org
+}
+
+exportBtn.addEventListener("click", (event) => {
+    /*
+    let organismToExport = JSON.parse(JSON.stringify(organism))  // deep copy
+    organismToExport = flipOrganism(organismToExport)
     let dataStr = JSON.stringify(organismToExport);
     let dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
     let exportFileDefaultName = 'data.json';
     let exportButton = document.getElementsByClassName("jsonexport")[0]
     exportButton.setAttribute('href', dataUri);
     exportButton.setAttribute('download', exportFileDefaultName);
+    */
+    let a = getNewFileHandle()
+    /*
+    let organismToExport = JSON.parse(JSON.stringify(organism))  // deep copy
+    organismToExport = flipOrganism(organismToExport)
+    let dataStr = JSON.stringify(organismToExport)
+    const blob = new Blob([datastr], {type:"application/json"})
+    exportBtn.href = URL.createObjectURL(blob)
+    exportBtn.download = 'data.json'
+    exportBtn.click()
+    URL.revokeObjectURL(exportBtn.href)
+    */
+})
+
+async function getNewFileHandle() {
+    const opts = {
+      types: [
+        {
+          description: "Text file",
+          accept: { "text/plain": [".txt"] },
+        },
+      ],
+    };
+    let data = "adada"
+    return await window.showSaveFilePicker(opts, data);
 }
 
 let form = document.querySelector('#upload');
@@ -83,15 +113,8 @@ function parseFile (event) {
 	let json = JSON.parse(str)
     organism = json
 
-    // for some reason the organisms are flipped so i have to fix it ig?
-    for (i = 0; i < organism.anatomy.cells.length; i++) {
-        let oldY = organism.anatomy.cells[i].loc_col
-        let oldX = organism.anatomy.cells[i].loc_row
-        organism.anatomy.cells[i].loc_row = oldY
-        organism.anatomy.cells[i].loc_col = oldX
-    }
+    organism = flipOrganism(organism)
 
-    console.log(organism)
     drawCells()
     updateGraph()
 }
