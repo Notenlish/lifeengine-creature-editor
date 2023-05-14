@@ -159,7 +159,6 @@ canvas.addEventListener("mousedown", (event) => {
   let y = event.clientY - canvasRect.top;
   let tileX = Math.round(x / cellSize - 0.5) - Math.round(halfGridWidth * 2);
   let tileY = Math.round(y / cellSize - 0.5) - Math.round(halfGridHeight * 2);
-  console.log(tileX, tileY);
   let cell = {};
   cell["loc_col"] = tileY;
   cell["loc_row"] = tileX;

@@ -1,15 +1,19 @@
 # organism-editor
- Organism editor for The Life Engine
+ Organism editor for [The Life Engine](https://thelifeengine.net/)
 
 # How to Use
- Just open https://notenlish.github.io/organism-editor/ .
+ Just open the editor [here](https://notenlish.github.io/organism-editor/)
+
+ Click the cells to choose them. To remove a cell click on the cell with the cross icon.
+ 
+ To export an cell just give it a name and then click on the save icon.
+ To load one upload the json file.
 
 # Contributing
- Clone the repository and then run `npm start`. Your changes will be automatically added.
+ Clone the repository and then run `npm start`. Your changes will take effect in the browser tab.
 
 # Deploying
  `npm run build` and `gh-pages -d public`. (Not necessarily required)
 
 # Notes
-There are more stuff I want to add and I want to just clean up the whole structure and use npm.
-I hope you like it, you can even contribute to it if you want!
+I hope you like this project, you can even contribute to it if you want!
