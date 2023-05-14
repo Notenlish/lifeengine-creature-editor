@@ -18,7 +18,7 @@
     "serve": "browser-sync start --server public --files public --mimeTypes \"text/html,text/css,application/javascript\"",
     "build": "npm-run-all copy --parallel",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d public"
   },
   "repository": {
     "type": "git",
