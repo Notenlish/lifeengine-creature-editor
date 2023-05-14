@@ -55,23 +55,23 @@ let organism = {
     cells: [],
   },
   species_name: "",
+  flip: function (org) {
+    for (i = 0; i < org.anatomy.cells.length; i++) {
+      [org.anatomy.cells[i].loc_col, org.anatomy.cells[i].loc_row] = [
+        org.anatomy.cells[i].loc_row,
+        org.anatomy.cells[i].loc_col,
+      ];
+    }
+    return org;
+  },
 };
 
 // for some reason the organisms are flipped so i have to fix it ig?
-function flipOrganism(org) {
-  for (i = 0; i < org.anatomy.cells.length; i++) {
-    [org.anatomy.cells[i].loc_col, org.anatomy.cells[i].loc_row] = [
-      org.anatomy.cells[i].loc_row,
-      org.anatomy.cells[i].loc_col,
-    ];
-  }
-  return org;
-}
 
 exportBtn.addEventListener("click", (event) => {
   organism.species_name = nameInput.value;
   let organismToExport = JSON.parse(JSON.stringify(organism)); // deep copy
-  organismToExport = flipOrganism(organismToExport);
+  organismToExport = organism.flip(organismToExport);
   let dataStr = JSON.stringify(organismToExport);
   let dataUri =
     "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
@@ -92,7 +92,7 @@ function parseFile(event) {
   let str = event.target.result;
   let json = JSON.parse(str);
   organism = json;
-  organism = flipOrganism(organism);
+  organism = organism.flip(organism);
   drawCells();
   updateGraph();
 }
