@@ -1,0 +1,42 @@
+{
+  "name": "organism-editor",
+  "version": "1.0.0",
+  "description": "Organism editor for The Life Engine",
+  "main": "editor.js",
+  "scripts": {
+    "start": "npm-run-all copy --parallel watch serve",
+    "copy": "npm-run-all --parallel copy:*",
+    "copy:html": "copyfiles -u 1 ./src/*.html public",
+    "copy:js": "copyfiles -u 1 ./src/js/*.js public",
+    "copy:assets": "copyfiles -u 1 ./src/assets/*.svg public",
+    "copy:css": "copyfiles -u 1 ./src/css/*.css public",
+    "watch:assets": "onchange \"src/assets/*.svg\" -- npm run copy:assets",
+    "watch:html": "onchange \"src/*.html\" -- npm run copy:html",
+    "watch:css": "onchange \"src/css/*.css\" -- npm run copy:css",
+    "watch:js": "onchange \"src/js/*.js\" -- npm run copy:js",
+    "watch": "npm-run-all --parallel watch:*",
+    "serve": "browser-sync start --server public --files public --mimeTypes \"text/html,text/css,application/javascript\"",
+    "build": "npm-run-all copy --parallel",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Notenlish/organism-editor.git"
+  },
+  "author": "Notenlish",
+  "license": "MIT",
+  "dependencies": {
+    "browser-sync": "^2.29.1",
+    "copyfiles": "^2.4.1",
+    "npm-run-all": "^4.1.5",
+    "onchange": "^7.1.0"
+  },
+  "bugs": {
+    "url": "https://github.com/Notenlish/organism-editor/issues"
+  },
+  "homepage": "https://notenlish.github.io/organism-editor/",
+  "devDependencies": {
+    "gh-pages": "^5.0.0"
+  }
+}

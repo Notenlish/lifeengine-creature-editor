@@ -19,19 +19,19 @@ h1 {
     display: flex;
     justify-content: space-around;
 }
-
 .editor-button {
     padding: 1rem;
     margin: 1rem;
     background-color: #9099c2;
     border-radius: 1rem;
 }
-
 .editor-button-wrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
 }
-
+.editor-button-wrapper form {
+    font-size: 1.3rem;
+}
 .jsonexport {
     width: 2rem;
     height: 2rem;
