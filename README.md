@@ -2,7 +2,7 @@
  Organism editor for The Life Engine
 
 # How to Use
- Just open https://notenlish.github.io/organism-editor.github.io/ .
+ Just open https://notenlish.github.io/organism-editor/ .
 
 # Notes
 There are more stuff I want to add and I want to just clean up the whole structure and use npm.
