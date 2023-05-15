@@ -13,7 +13,7 @@
  Clone the repository and then run `npm start`. Your changes will take effect in the browser tab.
 
 # Deploying
- `npm run build` and `gh-pages -d public`. (Not necessarily required)
+ `npm run build` and `npm run deploy`. (Not necessarily required)
 
 # Notes
 I hope you like this project, you can even contribute to it if you want!
