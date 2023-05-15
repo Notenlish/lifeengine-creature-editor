@@ -1,4 +1,4 @@
-const canvas = document.getElementsByTagName("canvas")[0];
+const canvas = document.querySelector("canvas");
 const canvasContainer = document.querySelector(".canvas-container");
 const ctx = canvas.getContext("2d");
 const exportBtn = document.querySelector(".jsonexport");
@@ -13,7 +13,7 @@ let currentCellType = "producer";
 let halfGridWidth = Math.round(canvas.width / 4 / cellSize);
 let halfGridHeight = Math.round(canvas.height / 4 / cellSize);
 
-const CELL_NAMES = {
+const cellNames = {
   producer: "green",
   mouth: "orange",
   killer: "red",
@@ -22,14 +22,14 @@ const CELL_NAMES = {
   armor: "purple",
 };
 
-const COLORS = {
+const colors = {
   orange: "#DEB14D",
   green: "#15DE59",
   red: "#F82380",
   grey: "#B7C1EA",
   purple: "#7230DB",
   blue: "#60D4FF",
-  black: "#000",
+  black: "#222",
   gray: "#333",
 };
 
@@ -55,30 +55,32 @@ let organism = {
     cells: [],
   },
   species_name: "",
+  flip: function (org) {
+    for (i = 0; i < org.anatomy.cells.length; i++) {
+      [org.anatomy.cells[i].loc_col, org.anatomy.cells[i].loc_row] = [
+        org.anatomy.cells[i].loc_row,
+        org.anatomy.cells[i].loc_col,
+      ];
+    }
+    return org;
+  },
 };
 
-// for some reason the organisms are flipped so i have to fix it ig?
-function flipOrganism(org) {
-  for (i = 0; i < org.anatomy.cells.length; i++) {
-    let oldY = org.anatomy.cells[i].loc_col;
-    let oldX = org.anatomy.cells[i].loc_row;
-    org.anatomy.cells[i].loc_row = oldY;
-    org.anatomy.cells[i].loc_col = oldX;
-  }
-  return org;
-}
-
 exportBtn.addEventListener("click", (event) => {
-  organism.species_name = nameInput.value
+  organism.species_name = nameInput.value;
   let organismToExport = JSON.parse(JSON.stringify(organism)); // deep copy
-  organismToExport = flipOrganism(organismToExport);
+  organismToExport = organism.flip(organismToExport);
   let dataStr = JSON.stringify(organismToExport);
   let dataUri =
     "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
-  let exportFileDefaultName = `${nameInput.value}.json`;
+  let exportFileDefaultName;
+  if (nameInput.value === "") {
+    exportFileDefaultName = "organism.json";
+  } else {
+    exportFileDefaultName = `${nameInput.value}.json`;
+  }
   exportBtn.setAttribute("href", dataUri);
   exportBtn.setAttribute("download", exportFileDefaultName);
-  exportBtn.click();
 });
 
 let form = document.querySelector("#upload");
@@ -89,7 +91,7 @@ function parseFile(event) {
   let str = event.target.result;
   let json = JSON.parse(str);
   organism = json;
-  organism = flipOrganism(organism);
+  organism = organism.flip(organism);
   drawCells();
   updateGraph();
 }
@@ -179,7 +181,7 @@ function drawCells() {
   ctx.fillStyle = "white";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  ctx.fillStyle = COLORS.gray;
+  ctx.fillStyle = colors.gray;
   let middleX = Math.round(canvas.width / (2 * cellSize)) * cellSize;
   let middleY = Math.round(canvas.height / (2 * cellSize)) * cellSize;
   ctx.fillRect(middleX, middleY, cellSize, cellSize);
@@ -187,8 +189,8 @@ function drawCells() {
   let cellLength = organism.anatomy.cells.length;
   for (let index = 0; index < cellLength; index++) {
     let cell = organism.anatomy.cells[index];
-    let colorName = CELL_NAMES[cell.state.name];
-    ctx.fillStyle = COLORS[colorName];
+    let colorName = cellNames[cell.state.name];
+    ctx.fillStyle = colors[colorName];
     let cellX = cell.loc_row * cellSize + halfGridWidth * 2 * cellSize; // - cameraX
     let cellY = cell.loc_col * cellSize + halfGridHeight * 2 * cellSize; // - cameraY
     ctx.fillRect(cellX, cellY, cellSize, cellSize);
@@ -222,7 +224,7 @@ function updateGraph() {
     left_corners.push([0, y]);
     right_corners.push([canvas.width, y]);
   }
-  ctx.strokeStyle = COLORS["black"]; // ctx.fillStyle
+  ctx.strokeStyle = colors["black"]; // ctx.fillStyle
   ctx.beginPath();
   for (let index = 0; index < top_corners.length; index += 1) {
     let coord1;
