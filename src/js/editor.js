@@ -34,8 +34,8 @@ const colors = {
 };
 
 let organism = {
-  c: 7,
-  r: 7,
+  c: 7,   // The Life Engine Parameters
+  r: 7,   // The Life Engine Parameter
   lifetime: 0,
   food_collected: 0,
   living: true,
@@ -142,6 +142,7 @@ function onMouseMove(event) {
   canvas.style.top = `${cameraY}px`;
   canvas.style.right = `${cameraX}px`;
 }
+
 function onMouseUp(event) {
   dragstartX = event.clientX;
   dragstartY = event.clientY;
