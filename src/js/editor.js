@@ -29,7 +29,7 @@ const colors = {
   grey: "#B7C1EA",
   purple: "#7230DB",
   blue: "#60D4FF",
-  black: "#000",
+  black: "#222",
   gray: "#333",
 };
 
@@ -66,8 +66,6 @@ let organism = {
   },
 };
 
-// for some reason the organisms are flipped so i have to fix it ig?
-
 exportBtn.addEventListener("click", (event) => {
   organism.species_name = nameInput.value;
   let organismToExport = JSON.parse(JSON.stringify(organism)); // deep copy
@@ -75,13 +73,14 @@ exportBtn.addEventListener("click", (event) => {
   let dataStr = JSON.stringify(organismToExport);
   let dataUri =
     "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
-  let exportFileDefaultName = `${nameInput.value}.json`;
-  if (nameInput.value == "") {
+  let exportFileDefaultName;
+  if (nameInput.value === "") {
     exportFileDefaultName = "organism.json";
+  } else {
+    exportFileDefaultName = `${nameInput.value}.json`;
   }
   exportBtn.setAttribute("href", dataUri);
   exportBtn.setAttribute("download", exportFileDefaultName);
-  exportBtn.click();
 });
 
 let form = document.querySelector("#upload");
