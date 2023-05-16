@@ -5,7 +5,7 @@ const exportBtn = document.querySelector(".jsonexport");
 const nameInput = document.querySelector("#org-name");
 let cameraX = 0;
 let cameraY = 0;
-let cellSize = 40;
+let cellSize = 50;
 let holding = false;
 let currentCellType = "producer";
 
@@ -183,9 +183,9 @@ function drawCells() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.fillStyle = colors.gray;
-    let middleX = Math.round(canvas.width / (2 * cellSize)) * cellSize;
-    let middleY = Math.round(canvas.height / (2 * cellSize)) * cellSize;
-    ctx.fillRect(middleX, middleY, cellSize, cellSize);
+    let middleX = Math.floor(canvas.width / (2 * cellSize));
+    let middleY = Math.floor(canvas.height / (2 * cellSize));
+    ctx.fillRect(middleX * cellSize, middleY * cellSize, cellSize, cellSize);
 
     let cellLength = organism.anatomy.cells.length;
     for (let index = 0; index < cellLength; index++) {
@@ -200,8 +200,8 @@ function drawCells() {
     ctx.fillStyle = "#555";
     ctx.beginPath();
     ctx.arc(
-        middleX + cellSize / 2,
-        middleY + cellSize / 2,
+        (middleX * cellSize) + cellSize / 2,
+        (middleY * cellSize) + cellSize / 2,
         cellSize * 0.3,
         0,
         2 * Math.PI
