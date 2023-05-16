@@ -10,7 +10,7 @@
  To load one upload the json file.
 
 # Contributing
- Clone the repository and then run `npm start`. Your changes will take effect in the browser tab.
+ Clone the repository, run `npm install` and then run `npm start`. Your changes will take effect in the browser tab.
 
 # Deploying
  `npm run build` and `npm run deploy`. (Not necessarily required)
