@@ -1,4 +1,9 @@
 const canvas = document.querySelector("canvas");
+canvas.oncontextmenu = function(event) {
+    event.preventDefault();  // disable the right click context menu
+    event.stopPropagation();
+}
+
 const canvasContainer = document.querySelector(".canvas-container");
 const ctx = canvas.getContext("2d");
 const exportBtn = document.querySelector(".jsonexport");
@@ -151,7 +156,7 @@ function onMouseUp(event) {
 }
 
 canvas.addEventListener("mousedown", (event) => {
-    if (event.button != 0) {
+    if (event.button != 0 && event.button != 2) {
         return;
     }
     let canvasRect = canvas.getBoundingClientRect();
@@ -163,14 +168,15 @@ canvas.addEventListener("mousedown", (event) => {
     cell["loc_col"] = tileY;
     cell["loc_row"] = tileX;
     cell["state"] = {};
-    if (currentCellType != "remove") {
+    if (event.button == 0) {
         cell["state"] = {name: currentCellType};
         organism.anatomy.cells.push(cell);
-    } else {
+    } else if (event.button == 2) {
         for (i = 0; i < organism.anatomy.cells.length; i++) {
             let c = organism.anatomy.cells[i];
             if (c.loc_col == tileY && c.loc_row == tileX) {
                 organism.anatomy.cells.splice(i, 1);
+                break;
             }
         }
     }

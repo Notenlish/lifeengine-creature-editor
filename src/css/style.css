@@ -97,23 +97,6 @@ h1 {
     overflow: hidden;
 }
 
-.editor-cellbutton[data-cell="remove"]::before {
-    content: '';
-    position: absolute;
-    background-color: red;
-    width: 75px;
-    height: 5px;
-    transform: translate(12.5px, 50px) rotateZ(45deg);
-}
-.editor-cellbutton[data-cell="remove"]::after {
-    content: '';
-    position: absolute;
-    background-color: red;
-    width: 75px;
-    height: 5px;
-    transform: translate(12.5px, 50px) rotateZ(-45deg);
-}
-
 .canvas-container {
     width: 55%;
     height: 100%;
