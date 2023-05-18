@@ -18,6 +18,11 @@ let currentCellType = "producer";
 let halfGridWidth = Math.round(canvas.width / 4 / cellSize);
 let halfGridHeight = Math.round(canvas.height / 4 / cellSize);
 
+let topcenter = canvasContainer.getBoundingClientRect().height / 2 - canvas.getBoundingClientRect().height / 2;
+let leftcenter = canvasContainer.getBoundingClientRect().width / 2 - canvas.getBoundingClientRect().width / 2;
+canvas.style.top = `${topcenter}px`;
+canvas.style.left = `${leftcenter}px`;
+
 const cellNames = {
     producer: "green",
     mouth: "orange",
