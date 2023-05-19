@@ -22,6 +22,8 @@ let topcenter = canvasContainer.getBoundingClientRect().height / 2 - canvas.getB
 let leftcenter = canvasContainer.getBoundingClientRect().width / 2 - canvas.getBoundingClientRect().width / 2;
 canvas.style.top = `${topcenter}px`;
 canvas.style.left = `${leftcenter}px`;
+cameraX = -leftcenter;
+cameraY = topcenter;
 
 const cellNames = {
     producer: "green",
@@ -143,6 +145,7 @@ for (let i = 0; i < cellButtons.length; i++) {
 }
 
 function onMouseMove(event) {
+    canvas.style.left = "";
     let draggedX = event.clientX - dragstartX;
     let draggedY = event.clientY - dragstartY;
     dragstartX = event.clientX;
