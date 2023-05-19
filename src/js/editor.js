@@ -7,6 +7,7 @@ canvas.oncontextmenu = function(event) {
 const canvasContainer = document.querySelector(".canvas-container");
 const ctx = canvas.getContext("2d");
 const exportBtn = document.querySelector(".jsonexport");
+const importBtn = document.querySelector(".jsonimport");
 const nameInput = document.querySelector("#org-name");
 let cameraX = 0;
 let cameraY = 0;
@@ -99,7 +100,14 @@ let form = document.querySelector("#upload");
 let file = document.querySelector("#file");
 form.addEventListener("submit", importJson);
 
+importBtn.addEventListener("click", (event) => {
+    file.click(); // Simulate a click on the file input button
+    // Make the file submit the form
+    file.addEventListener("change", importJson);
+});
+
 function parseFile(event) {
+    debugger;
     let str = event.target.result;
     let json = JSON.parse(str);
     organism = json;
@@ -109,6 +117,7 @@ function parseFile(event) {
 }
 
 function importJson(event) {
+    debugger;
     event.preventDefault();
     if (!file.value.length) return;
     let reader = new FileReader();

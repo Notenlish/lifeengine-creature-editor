@@ -31,21 +31,22 @@
                 </div>
                 <div class="editor-cellbutton" data-cell="eye">
                 </div>
-            </div>
-            <div class="editor-button-wrapper">
-                <a href="" download="" class="editor-button jsonexport">
-                    <img src="assets/export.svg" alt="Export an organism">
-                </a>
-                <form class="jsonimport" id="upload">
-                    <label for="file">Load organism</label>
-                    <input type="file" id="file" accept=".json">
-                    <button>Upload</button>
-                </form>
                 <form>
                     <label for="org-name">Organism Name:</label>
                     <input name="searchTxt" id="org-name" type="text">
                 </form>
             </div>
+        </div>
+        <div class="editor-button-wrapper">
+            <a href="" download="" class="editor-button jsonexport">
+                <img src="assets/export.svg" alt="Export an organism">
+            </a>
+            <a id="upload" class="editor-button jsonimport">
+                <img src="assets/import.svg" alt="Import an organism">
+                <label for="file">Load organism</label>
+                <input type="file" id="file" accept=".json">
+                <button>Upload</button>
+            </a>
         </div>
     </div>
 </main>

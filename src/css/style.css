@@ -19,6 +19,7 @@ main {
 
 .editor-setting {
     position: fixed;
+    right: 0;
 }
 
 .editor-button {
@@ -26,17 +27,16 @@ main {
     margin: 1rem;
     background-color: #9099c2;
     border-radius: 1rem;
+    width: 2rem;
+    height: 2rem;
 }
 .editor-button-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    position: fixed;
+    bottom: 0;
 }
 .editor-button-wrapper form {
     font-size: 1.3rem;
-}
-.jsonexport {
-    width: 2rem;
-    height: 2rem;
 }
 
 .jsonexport img {
@@ -46,18 +46,16 @@ main {
 }
 
 .jsonimport {
-    width: 20rem;
-    height: 5rem;
     display: flex;
     flex-direction: column;
     justify-content: end;
 }
 
-.jsonimport button {
-    padding-block: 0.1rem;
-    padding-inline: 1rem;
-    margin: 0;
-    width: min-content;
+.jsonimport * {
+    display: none;
+}
+.jsonimport img {
+    display: block;
 }
 
 .editor-cellbutton-wrapper {
@@ -92,11 +90,6 @@ main {
 }
 .editor-cellbutton[data-cell="eye"] {
     background-color: #B7C1EA;
-}
-
-.editor-cellbutton[data-cell="remove"] {
-    background-color: transparent;
-    overflow: hidden;
 }
 
 .canvas-container {
