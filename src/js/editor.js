@@ -92,8 +92,8 @@ resizeBtn.addEventListener("click", (event) => resizeCanvas(event));
 
 function resizeCanvas(event) {
     event.preventDefault(); // Prevents the default form submission behavior
-    canvas.width = canvasWidthInput.value * cellSize;
-    canvas.height = canvasHeightInput.value * cellSize;
+    canvas.width = canvasWidthInput.value * cellSize * 2 + cellSize;
+    canvas.height = canvasHeightInput.value * cellSize * 2 + cellSize;
     halfGridWidth = Math.round(canvas.width / 4 / cellSize);
     halfGridHeight = Math.round(canvas.height / 4 / cellSize);
     drawCells();
