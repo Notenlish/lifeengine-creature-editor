@@ -8,9 +8,10 @@ const canvasContainer = document.querySelector(".canvas-container");
 const ctx = canvas.getContext("2d");
 const exportBtn = document.querySelector("#jsonexport");
 const importBtn = document.querySelector("#jsonimport");
-console.log("importBtn: ", importBtn);
 const resizeBtn = document.querySelector("#canvas-resize");
-resizeBtn.addEventListener("click", resizeCanvas);
+resizeBtn.addEventListener("click", (event) => {
+    resizeCanvas(event);
+});
 
 const nameInput = document.querySelector("#org-name");
 const foodInput = document.querySelector("#org-food");
@@ -77,20 +78,23 @@ let organism = {
         cells: [],
     },
     species_name: "",
-    flip: function (org) {
-        for (let i = 0; i < org.anatomy.cells.length; i++) {
-            [org.anatomy.cells[i].loc_col, org.anatomy.cells[i].loc_row] = [
-                org.anatomy.cells[i].loc_row,
-                org.anatomy.cells[i].loc_col,
+    flip,
+};
+
+function flip(org) {
+    for (let i = 0; i < org.anatomy.cells.length; i++) {
+        [org.anatomy.cells[i].loc_col, org.anatomy.cells[i].loc_row] = [
+            org.anatomy.cells[i].loc_row,
+            org.anatomy.cells[i].loc_col,
             ];
-        }
-        return org;
-    },
+    }
+    return org;
 };
 
 function resizeCanvas(event) {
-    canvas.width = canvasWidthInput.value;
-    canvas.height = canvasHeightInput.value;
+    event.preventDefault(); // Prevents the default form submission behavior
+    canvas.width = canvasWidthInput.value * cellSize;
+    canvas.height = canvasHeightInput.value * cellSize;
     halfGridWidth = Math.round(canvas.width / 4 / cellSize);
     halfGridHeight = Math.round(canvas.height / 4 / cellSize);
     drawCells();
@@ -107,7 +111,7 @@ function updateOrganism() {
 exportBtn.addEventListener("click", (event) => {
     updateOrganism();
     let organismToExport = JSON.parse(JSON.stringify(organism)); // deep copy
-    organismToExport = organism.flip(organismToExport);
+    organismToExport = flip(organismToExport);
     let dataStr = JSON.stringify(organismToExport);
     let dataUri =
         "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
@@ -123,7 +127,7 @@ exportBtn.addEventListener("click", (event) => {
 
 let form = document.querySelector("#upload");
 let file = document.querySelector("#file");
-form.addEventListener("submit", importJson);
+// form.addEventListener("submit", importJson);
 
 importBtn.addEventListener("click", (event) => {
     file.click(); // Simulate a click on the file input button
@@ -135,13 +139,7 @@ function parseFile(event) {
     let str = event.target.result;
     let json = JSON.parse(str);
     organism = json;
-    // organism = organism.flip(organism);
-    for (let i = 0; i < organism.anatomy.cells.length; i++) {
-        [organism.anatomy.cells[i].loc_col, organism.anatomy.cells[i].loc_row] = [
-            organism.anatomy.cells[i].loc_row,
-            organism.anatomy.cells[i].loc_col,
-        ];
-    }
+    organism = flip(organism);
     
     nameInput.value = organism.species_name;
     foodInput.value = organism.food_collected;
@@ -305,6 +303,7 @@ function updateGraph() {
     }
     ctx.closePath();
 }
+
 resizeCanvas();
 drawCells();
 updateGraph();
