@@ -10,7 +10,9 @@ const exportBtn = document.querySelector("#jsonexport");
 const importBtn = document.querySelector("#jsonimport");
 console.log("importBtn: ", importBtn);
 const resizeBtn = document.querySelector("#canvas-resize");
-resizeBtn.addEventListener("click", resizeCanvas);
+resizeBtn.addEventListener("click", function(event) {
+    resizeCanvas(event);
+});
 
 const nameInput = document.querySelector("#org-name");
 const foodInput = document.querySelector("#org-food");
@@ -91,8 +93,9 @@ function flip(org) {
 };
 
 function resizeCanvas(event) {
-    canvas.width = canvasWidthInput.value;
-    canvas.height = canvasHeightInput.value;
+    event.preventDefault(); // Prevents the default form submission behavior
+    canvas.width = canvasWidthInput.value * cellSize;
+    canvas.height = canvasHeightInput.value * cellSize;
     halfGridWidth = Math.round(canvas.width / 4 / cellSize);
     halfGridHeight = Math.round(canvas.height / 4 / cellSize);
     drawCells();
@@ -125,7 +128,7 @@ exportBtn.addEventListener("click", (event) => {
 
 let form = document.querySelector("#upload");
 let file = document.querySelector("#file");
-form.addEventListener("submit", importJson);
+// form.addEventListener("submit", importJson);
 
 importBtn.addEventListener("click", (event) => {
     file.click(); // Simulate a click on the file input button
@@ -301,6 +304,7 @@ function updateGraph() {
     }
     ctx.closePath();
 }
+
 resizeCanvas();
 drawCells();
 updateGraph();
