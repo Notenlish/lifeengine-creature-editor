@@ -6,18 +6,27 @@ canvas.oncontextmenu = function(event) {
 
 const canvasContainer = document.querySelector(".canvas-container");
 const ctx = canvas.getContext("2d");
-const exportBtn = document.querySelector(".jsonexport");
-const importBtn = document.querySelector(".jsonimport");
+const exportBtn = document.querySelector("#jsonexport");
+const importBtn = document.querySelector("#jsonimport");
+console.log("importBtn: ", importBtn);
+const resizeBtn = document.querySelector("#canvas-resize");
+resizeBtn.addEventListener("click", resizeCanvas);
+
 const nameInput = document.querySelector("#org-name");
+const foodInput = document.querySelector("#org-food");
+const directionInput = document.querySelector("#org-direction");
+const mutationInput = document.querySelector("#org-mutation");
+const canvasWidthInput = document.querySelector("#canvas-width");
+const canvasHeightInput = document.querySelector("#canvas-height");
+
 let cameraX = 0;
 let cameraY = 0;
 let cellSize = 50;
 let holding = false;
 let currentCellType = "producer";
 
-// I shouldnt forget to update this when resizing the canvas
-let halfGridWidth = Math.round(canvas.width / 4 / cellSize);
-let halfGridHeight = Math.round(canvas.height / 4 / cellSize);
+let halfGridWidth;
+let halfGridHeight;
 
 let topcenter = canvasContainer.getBoundingClientRect().height / 2 - canvas.getBoundingClientRect().height / 2;
 let leftcenter = canvasContainer.getBoundingClientRect().width / 2 - canvas.getBoundingClientRect().width / 2;
@@ -79,8 +88,24 @@ let organism = {
     },
 };
 
-exportBtn.addEventListener("click", (event) => {
+function resizeCanvas(event) {
+    canvas.width = canvasWidthInput.value;
+    canvas.height = canvasHeightInput.value;
+    halfGridWidth = Math.round(canvas.width / 4 / cellSize);
+    halfGridHeight = Math.round(canvas.height / 4 / cellSize);
+    drawCells();
+    updateGraph();
+}
+
+function updateOrganism() {
     organism.species_name = nameInput.value;
+    organism.food_collected = parseInt(foodInput.value);
+    organism.direction = parseInt(directionInput.value);
+    organism.mutability = parseInt(mutationInput.value);
+}
+
+exportBtn.addEventListener("click", (event) => {
+    updateOrganism();
     let organismToExport = JSON.parse(JSON.stringify(organism)); // deep copy
     organismToExport = organism.flip(organismToExport);
     let dataStr = JSON.stringify(organismToExport);
@@ -107,17 +132,27 @@ importBtn.addEventListener("click", (event) => {
 });
 
 function parseFile(event) {
-    debugger;
     let str = event.target.result;
     let json = JSON.parse(str);
     organism = json;
-    organism = organism.flip(organism);
+    // organism = organism.flip(organism);
+    for (let i = 0; i < organism.anatomy.cells.length; i++) {
+        [organism.anatomy.cells[i].loc_col, organism.anatomy.cells[i].loc_row] = [
+            organism.anatomy.cells[i].loc_row,
+            organism.anatomy.cells[i].loc_col,
+        ];
+    }
+    
+    nameInput.value = organism.species_name;
+    foodInput.value = organism.food_collected;
+    directionInput.value = organism.direction;
+    mutationInput.value = organism.mutability;
+    
     drawCells();
     updateGraph();
 }
 
 function importJson(event) {
-    debugger;
     event.preventDefault();
     if (!file.value.length) return;
     let reader = new FileReader();
@@ -270,6 +305,6 @@ function updateGraph() {
     }
     ctx.closePath();
 }
-
+resizeCanvas();
 drawCells();
 updateGraph();

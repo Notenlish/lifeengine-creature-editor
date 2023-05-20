@@ -17,11 +17,6 @@ main {
     height: 100%;
 }
 
-.editor-setting {
-    position: fixed;
-    right: 0;
-}
-
 .editor-button {
     padding: 1rem;
     margin: 1rem;
@@ -39,23 +34,35 @@ main {
     font-size: 1.3rem;
 }
 
-.jsonexport img {
+#jsonexport img {
     width: 2rem;
     height: 2rem;
     background-color: #9099c2;
 }
 
-.jsonimport {
+#jsonimport {
     display: flex;
     flex-direction: column;
     justify-content: end;
 }
-
-.jsonimport * {
+#jsonimport * {
     display: none;
 }
-.jsonimport img {
+#jsonimport img {
     display: block;
+}
+
+.editor-setting {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    height: 100%;
+    gap: 1.5rem;
+    right: 0;
+    margin: 0;
+    padding: 1rem;
+    background-color: #979EBC;
 }
 
 .editor-cellbutton-wrapper {
@@ -63,15 +70,13 @@ main {
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
 }
-
 .editor-cellbutton {
-    width: 100px;
-    height: 100px;
+    width: 4rem;
+    height: 4rem;
     border: 2px solid black;
 }
-
 .editor-cellbutton[data-active] {
-    border: 2px solid white;
+    border: 2px solid yellow;
 }
 .editor-cellbutton[data-cell="mouth"] {
     background-color: #DEB14D;
@@ -90,6 +95,12 @@ main {
 }
 .editor-cellbutton[data-cell="eye"] {
     background-color: #B7C1EA;
+}
+
+.organism-detail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .canvas-container {
