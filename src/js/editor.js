@@ -8,9 +8,8 @@ const canvasContainer = document.querySelector(".canvas-container");
 const ctx = canvas.getContext("2d");
 const exportBtn = document.querySelector("#jsonexport");
 const importBtn = document.querySelector("#jsonimport");
-console.log("importBtn: ", importBtn);
 const resizeBtn = document.querySelector("#canvas-resize");
-resizeBtn.addEventListener("click", function(event) {
+resizeBtn.addEventListener("click", (event) => {
     resizeCanvas(event);
 });
 
