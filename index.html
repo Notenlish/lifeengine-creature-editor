@@ -4,53 +4,71 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta keyword="The Life Engine, LifeEngine, Life Engine, life engine, lifeengine, evolution simulator, The Life Engine editor">
+    <meta
+        keyword="The Life Engine, LifeEngine, Life Engine, life engine, lifeengine, evolution simulator, The Life Engine editor">
     <meta description="Organism Editor is a tool you can use to create organisms to use in The Life Engine.">
     <link rel="stylesheet" href="css/style.css">
     <title>Organism Editor</title>
-    <script defer src="js/editor.js"></script>
+    <script type="module" defer src="js/editor.js"></script>
 </head>
 <body>
-    <main>
-        <h1>Organism Editor</h1>
-        <div class="editor">
-            <div class="canvas-container">
-                <canvas width="500" height="500"></canvas>
-            </div>
-            <div class="editor-setting">
-                <div class="editor-cellbutton-wrapper">
-                    <div class="editor-cellbutton" data-cell="mouth">
-                    </div>
-                    <div class="editor-cellbutton" data-cell="producer" data-active="">
-                    </div>
-                    <div class="editor-cellbutton" data-cell="mover">
-                    </div>
-                    <div class="editor-cellbutton" data-cell="killer">
-                    </div>
-                    <div class="editor-cellbutton" data-cell="armor">
-                    </div>
-                    <div class="editor-cellbutton" data-cell="eye">
-                    </div>
-                    <div class="editor-cellbutton" data-cell="remove">
-                    </div>
-                </div>
-                <div class="editor-button-wrapper">
-                    <a href="" download="" class="editor-button jsonexport">
-                        <img src="assets/export.svg" alt="Export an organism">
-                    </a>
-                    <form class="jsonimport" id="upload">
-                        <label for="file">Load organism</label>
-                        <input type="file" id="file" accept=".json">
-                        <button>Upload</button>
-                    </form>
-                    <form>
-                        <label>Organism Name:</label>
-                        <input name="searchTxt" id="org-name" type="text">
-                    </form>
-                </div>
-            </div>
+<main>
+    <div class="editor">
+        <div class="canvas-container">
+            <canvas width="550" height="550"></canvas>
         </div>
-    </main>
+        <div class="editor-setting">
+            <div class="editor-cellbutton-wrapper">
+                <div class="editor-cellbutton" data-cell="mouth">
+                </div>
+                <div class="editor-cellbutton" data-cell="producer" data-active="">
+                </div>
+                <div class="editor-cellbutton" data-cell="mover">
+                </div>
+                <div class="editor-cellbutton" data-cell="killer">
+                </div>
+                <div class="editor-cellbutton" data-cell="armor">
+                </div>
+                <div class="editor-cellbutton" data-cell="eye">
+                </div>
+            </div>
+            <form class="organism-detail">
+                <label for="org-name">Name:</label>
+                <input name="name" id="org-name" type="text">
+
+                <label for="org-food">Food collected:</label>
+                <input name="food" id="org-food" value="0" type="number">
+                
+                <label for="org-direction">Direction:</label>
+                <input name="direction" id="org-direction" value="0" type="number">
+                
+                <label for="org-mutation">Mutation rate:</label>
+                <input name="mutation" id="org-mutation" value="5" type="number">
+                <br>
+                <label for="canvas-width">Canvas Width Radius:</label>
+                <input name="width" id="canvas-width" min="1" value="5" type="number">
+                
+                <label for="canvas-height">Canvas Height Radius:</label>
+                <input name="height" id="canvas-height" min="1" value="5" type="number">
+
+                <label for="canvas-cellSize">Canvas Cell Size:</label>
+                <input name="cellSize" id="canvas-cellSize" min="1" value="50" type="number">
+                <button id="canvas-resize">Resize</button>
+            </form>
+        </div>
+        <div class="editor-button-wrapper">
+            <a href="" download="" id="jsonexport" class="editor-button">
+                <img src="assets/export.svg" alt="Export an organism">
+            </a>
+            <a id="jsonimport" class="editor-button">
+                <img src="assets/import.svg" alt="Import an organism">
+                <label for="file">Load organism</label>
+                <input type="file" id="file" accept=".json">
+                <button>Upload</button>
+            </a>
+        </div>
+    </div>
+</main>
 </body>
 </html>
 

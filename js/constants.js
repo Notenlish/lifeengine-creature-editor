@@ -1,0 +1,12 @@
+export const canvas = document.querySelector("canvas");
+export const canvasContainer = document.querySelector(".canvas-container");
+export const ctx = canvas.getContext("2d");
+export const exportBtn = document.querySelector("#jsonexport");
+export const importBtn = document.querySelector("#jsonimport");
+export const resizeBtn = document.querySelector("#canvas-resize");
+export const nameInput = document.querySelector("#org-name");
+export const foodInput = document.querySelector("#org-food");
+export const directionInput = document.querySelector("#org-direction");
+export const mutationInput = document.querySelector("#org-mutation");
+export const canvasWidthInput = document.querySelector("#canvas-width");
+export const canvasHeightInput = document.querySelector("#canvas-height");

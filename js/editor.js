@@ -1,41 +1,49 @@
-const canvas = document.querySelector("canvas");
-const canvasContainer = document.querySelector(".canvas-container");
-const ctx = canvas.getContext("2d");
-const exportBtn = document.querySelector(".jsonexport");
-const nameInput = document.querySelector("#org-name");
+import {
+  canvas,
+  canvasContainer,
+  ctx,
+  exportBtn,
+  importBtn,
+  resizeBtn,
+  nameInput,
+  foodInput,
+  directionInput,
+  mutationInput,
+  canvasWidthInput,
+  canvasHeightInput,
+  cellSizeInput,
+  cellNames,
+  colors,
+} from "./variables.js";
+
+canvas.oncontextmenu = function (event) {
+  event.preventDefault(); // disable the right click context menu
+  event.stopPropagation();
+};
+
 let cameraX = 0;
 let cameraY = 0;
-let cellSize = 40;
+let cellSize = 50;
 let holding = false;
 let currentCellType = "producer";
+let halfGridWidth;
+let halfGridHeight;
+let zoom = 2;
 
-// I shouldnt forget to update this when resizing the canvas
-let halfGridWidth = Math.round(canvas.width / 4 / cellSize);
-let halfGridHeight = Math.round(canvas.height / 4 / cellSize);
-
-const cellNames = {
-  producer: "green",
-  mouth: "orange",
-  killer: "red",
-  mover: "blue",
-  eye: "grey",
-  armor: "purple",
-};
-
-const colors = {
-  orange: "#DEB14D",
-  green: "#15DE59",
-  red: "#F82380",
-  grey: "#B7C1EA",
-  purple: "#7230DB",
-  blue: "#60D4FF",
-  black: "#222",
-  gray: "#333",
-};
+let topcenter =
+  canvasContainer.getBoundingClientRect().height / 2 -
+  canvas.getBoundingClientRect().height / 2;
+let leftcenter =
+  canvasContainer.getBoundingClientRect().width / 2 -
+  canvas.getBoundingClientRect().width / 2;
+canvas.style.top = `${topcenter}px`;
+canvas.style.left = `${leftcenter}px`;
+cameraX = -leftcenter;
+cameraY = topcenter;
 
 let organism = {
-  c: 7,
-  r: 7,
+  c: 7, // The Life Engine Parameters
+  r: 7, // The Life Engine Parameter
   lifetime: 0,
   food_collected: 0,
   living: true,
@@ -55,21 +63,63 @@ let organism = {
     cells: [],
   },
   species_name: "",
-  flip: function (org) {
-    for (i = 0; i < org.anatomy.cells.length; i++) {
-      [org.anatomy.cells[i].loc_col, org.anatomy.cells[i].loc_row] = [
-        org.anatomy.cells[i].loc_row,
-        org.anatomy.cells[i].loc_col,
-      ];
-    }
-    return org;
-  },
+  flip,
 };
 
-exportBtn.addEventListener("click", (event) => {
+function flip(org) {
+  for (let i = 0; i < org.anatomy.cells.length; i++) {
+    [org.anatomy.cells[i].loc_col, org.anatomy.cells[i].loc_row] = [
+      org.anatomy.cells[i].loc_row,
+      org.anatomy.cells[i].loc_col,
+    ];
+  }
+  return org;
+}
+
+function ensureOdd(num) {
+  if (num % 2 === 0) {
+    return num + 1;
+  } else {
+    return num;
+  }
+}
+
+resizeBtn.addEventListener("click", resizeCanvas);
+function resizeCanvas(event) {
+  event.preventDefault(); // Prevents page refresh
+  cellSize = parseInt(cellSizeInput.value);
+  canvasWidthInput.value = ensureOdd(parseInt(canvasWidthInput.value));
+  canvasHeightInput.value = ensureOdd(parseInt(canvasHeightInput.value));
+  canvas.width = canvasWidthInput.value * cellSize * 2 + cellSize;
+  canvas.height = canvasHeightInput.value * cellSize * 2 + cellSize;
+  halfGridWidth = Math.round(canvas.width / 4 / cellSize);
+  halfGridHeight = Math.round(canvas.height / 4 / cellSize);
+  canvas.style.transform = `scale(${zoom})`;
+  drawCells();
+  updateGraph();
+}
+
+canvasContainer.addEventListener("wheel", (event) => {
+  if (event.deltaY > 0) {
+    zoom += Math.max(event.deltaY * -0.06, 0.06);
+  } else if (event.deltaY < 0) {
+    zoom += Math.min(event.deltaY * -0.06, -0.06);
+  }
+  zoom = Math.min(Math.max(0.125, zoom), 4);
+  canvas.style.transform = `scale(${zoom})`;
+});
+
+function updateOrganism() {
   organism.species_name = nameInput.value;
+  organism.food_collected = parseInt(foodInput.value);
+  organism.direction = parseInt(directionInput.value);
+  organism.mutability = parseInt(mutationInput.value);
+}
+
+exportBtn.addEventListener("click", (event) => {
+  updateOrganism();
   let organismToExport = JSON.parse(JSON.stringify(organism)); // deep copy
-  organismToExport = organism.flip(organismToExport);
+  organismToExport = flip(organismToExport);
   let dataStr = JSON.stringify(organismToExport);
   let dataUri =
     "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
@@ -85,13 +135,23 @@ exportBtn.addEventListener("click", (event) => {
 
 let form = document.querySelector("#upload");
 let file = document.querySelector("#file");
-form.addEventListener("submit", importJson);
+
+importBtn.addEventListener("click", (event) => {
+  file.click(); // Simulate a click on the file input button
+  file.addEventListener("change", importJson); // Make the file submit the form
+});
 
 function parseFile(event) {
   let str = event.target.result;
   let json = JSON.parse(str);
   organism = json;
-  organism = organism.flip(organism);
+  organism = flip(organism);
+
+  nameInput.value = organism.species_name;
+  foodInput.value = organism.food_collected;
+  directionInput.value = organism.direction;
+  mutationInput.value = organism.mutability;
+
   drawCells();
   updateGraph();
 }
@@ -117,13 +177,13 @@ canvasContainer.addEventListener("mousedown", (event) => {
 });
 
 let cellButtons = document.getElementsByClassName("editor-cellbutton");
-for (i = 0; i < cellButtons.length; i++) {
+for (let i = 0; i < cellButtons.length; i++) {
   let cellButton = cellButtons[i];
   cellButton.addEventListener("mousedown", (event) => {
     if (event.button != 0) {
       return;
     }
-    for (i = 0; i < cellButtons.length; i++) {
+    for (let i = 0; i < cellButtons.length; i++) {
       let otherCell = cellButtons[i];
       delete otherCell.dataset.active;
     }
@@ -133,6 +193,7 @@ for (i = 0; i < cellButtons.length; i++) {
 }
 
 function onMouseMove(event) {
+  canvas.style.left = "";
   let draggedX = event.clientX - dragstartX;
   let draggedY = event.clientY - dragstartY;
   dragstartX = event.clientX;
@@ -142,6 +203,7 @@ function onMouseMove(event) {
   canvas.style.top = `${cameraY}px`;
   canvas.style.right = `${cameraX}px`;
 }
+
 function onMouseUp(event) {
   dragstartX = event.clientX;
   dragstartY = event.clientY;
@@ -150,26 +212,27 @@ function onMouseUp(event) {
 }
 
 canvas.addEventListener("mousedown", (event) => {
-  if (event.button != 0) {
+  if (event.button != 0 && event.button != 2) {
     return;
   }
   let canvasRect = canvas.getBoundingClientRect();
-  let x = event.clientX - canvasRect.left;
-  let y = event.clientY - canvasRect.top;
+  let x = (event.clientX - canvasRect.left) / zoom;
+  let y = (event.clientY - canvasRect.top) / zoom;
   let tileX = Math.round(x / cellSize - 0.5) - Math.round(halfGridWidth * 2);
   let tileY = Math.round(y / cellSize - 0.5) - Math.round(halfGridHeight * 2);
   let cell = {};
   cell["loc_col"] = tileY;
   cell["loc_row"] = tileX;
   cell["state"] = {};
-  if (currentCellType != "remove") {
+  if (event.button == 0) {
     cell["state"] = { name: currentCellType };
     organism.anatomy.cells.push(cell);
-  } else {
-    for (i = 0; i < organism.anatomy.cells.length; i++) {
+  } else if (event.button == 2) {
+    for (let i = 0; i < organism.anatomy.cells.length; i++) {
       let c = organism.anatomy.cells[i];
       if (c.loc_col == tileY && c.loc_row == tileX) {
         organism.anatomy.cells.splice(i, 1);
+        break;
       }
     }
   }
@@ -182,9 +245,9 @@ function drawCells() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   ctx.fillStyle = colors.gray;
-  let middleX = Math.round(canvas.width / (2 * cellSize)) * cellSize;
-  let middleY = Math.round(canvas.height / (2 * cellSize)) * cellSize;
-  ctx.fillRect(middleX, middleY, cellSize, cellSize);
+  let middleX = Math.floor(canvas.width / (2 * cellSize));
+  let middleY = Math.floor(canvas.height / (2 * cellSize));
+  ctx.fillRect(middleX * cellSize, middleY * cellSize, cellSize, cellSize);
 
   let cellLength = organism.anatomy.cells.length;
   for (let index = 0; index < cellLength; index++) {
@@ -199,8 +262,8 @@ function drawCells() {
   ctx.fillStyle = "#555";
   ctx.beginPath();
   ctx.arc(
-    middleX + cellSize / 2,
-    middleY + cellSize / 2,
+    middleX * cellSize + cellSize / 2,
+    middleY * cellSize + cellSize / 2,
     cellSize * 0.3,
     0,
     2 * Math.PI
@@ -247,5 +310,9 @@ function updateGraph() {
   ctx.closePath();
 }
 
-drawCells();
-updateGraph();
+document.addEventListener(
+  "DOMContentLoaded",
+  (event) => resizeCanvas(event),
+  drawCells(),
+  updateGraph()
+);
