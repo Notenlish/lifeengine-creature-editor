@@ -9,9 +9,6 @@ const ctx = canvas.getContext("2d");
 const exportBtn = document.querySelector("#jsonexport");
 const importBtn = document.querySelector("#jsonimport");
 const resizeBtn = document.querySelector("#canvas-resize");
-resizeBtn.addEventListener("click", (event) => {
-    resizeCanvas(event);
-});
 
 const nameInput = document.querySelector("#org-name");
 const foodInput = document.querySelector("#org-food");
@@ -90,6 +87,8 @@ function flip(org) {
     }
     return org;
 };
+
+resizeBtn.addEventListener("click", (event) => resizeCanvas(event));
 
 function resizeCanvas(event) {
     event.preventDefault(); // Prevents the default form submission behavior
@@ -304,6 +303,4 @@ function updateGraph() {
     ctx.closePath();
 }
 
-resizeCanvas();
-drawCells();
-updateGraph();
+document.addEventListener('DOMContentLoaded', (event) => resizeCanvas(event), drawCells(), updateGraph());
