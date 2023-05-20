@@ -1,4 +1,4 @@
-body {
+html, body {
     width: 100%;
     height: 100%;
     margin: 0;
@@ -8,54 +8,61 @@ main {
     display: flex;
     justify-items: center;
     flex-direction: column;
-}
-
-h1 {
-    text-align: center;
-    margin: 0.8rem;
+    height: 100%;
 }
 
 .editor {
     display: flex;
     justify-content: space-around;
+    height: 100%;
 }
+
 .editor-button {
     padding: 1rem;
     margin: 1rem;
     background-color: #9099c2;
     border-radius: 1rem;
+    width: 2rem;
+    height: 2rem;
 }
 .editor-button-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    position: fixed;
+    bottom: 0;
 }
 .editor-button-wrapper form {
     font-size: 1.3rem;
 }
-.jsonexport {
-    width: 2rem;
-    height: 2rem;
-}
 
-.jsonexport img {
+#jsonexport img {
     width: 2rem;
     height: 2rem;
     background-color: #9099c2;
 }
 
-.jsonimport {
-    width: 20rem;
-    height: 5rem;
+#jsonimport {
     display: flex;
     flex-direction: column;
     justify-content: end;
 }
+#jsonimport * {
+    display: none;
+}
+#jsonimport img {
+    display: block;
+}
 
-.jsonimport button {
-    padding-block: 0.1rem;
-    padding-inline: 1rem;
+.editor-setting {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    height: 100%;
+    gap: 1.5rem;
+    right: 0;
     margin: 0;
-    width: min-content;
+    padding: 1rem;
+    background-color: #979EBC;
 }
 
 .editor-cellbutton-wrapper {
@@ -63,15 +70,13 @@ h1 {
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
 }
-
 .editor-cellbutton {
-    width: 100px;
-    height: 100px;
+    width: 4rem;
+    height: 4rem;
     border: 2px solid black;
 }
-
 .editor-cellbutton[data-active] {
-    border: 2px solid white;
+    border: 2px solid yellow;
 }
 .editor-cellbutton[data-cell="mouth"] {
     background-color: #DEB14D;
@@ -92,13 +97,14 @@ h1 {
     background-color: #B7C1EA;
 }
 
-.editor-cellbutton[data-cell="remove"] {
-    background-color: transparent;
-    overflow: hidden;
+.organism-detail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .canvas-container {
-    width: 55%;
+    width: 100%;
     height: 100%;
     background-color: #416788;
     overflow: hidden;

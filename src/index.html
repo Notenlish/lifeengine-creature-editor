@@ -13,7 +13,6 @@
 </head>
 <body>
 <main>
-    <h1>Organism Editor</h1>
     <div class="editor">
         <div class="canvas-container">
             <canvas width="550" height="550"></canvas>
@@ -33,20 +32,37 @@
                 <div class="editor-cellbutton" data-cell="eye">
                 </div>
             </div>
-            <div class="editor-button-wrapper">
-                <a href="" download="" class="editor-button jsonexport">
-                    <img src="assets/export.svg" alt="Export an organism">
-                </a>
-                <form class="jsonimport" id="upload">
-                    <label for="file">Load organism</label>
-                    <input type="file" id="file" accept=".json">
-                    <button>Upload</button>
-                </form>
-                <form>
-                    <label for="org-name">Organism Name:</label>
-                    <input name="searchTxt" id="org-name" type="text">
-                </form>
-            </div>
+            <form class="organism-detail">
+                <label for="org-name">Name:</label>
+                <input name="searchTxt" id="org-name" type="text">
+
+                <label for="org-food">Food collected:</label>
+                <input name="searchTxt" id="org-food" value="0" type="number">
+                
+                <label for="org-direction">Direction:</label>
+                <input name="searchTxt" id="org-direction" value="0" type="number">
+                
+                <label for="org-mutation">Mutation rate:</label>
+                <input name="searchTxt" id="org-mutation" value="5" type="number">
+                <br>
+                <label for="canvas-width">Canvas Width:</label>
+                <input name="searchTxt" id="canvas-width" value="11" type="number">
+                
+                <label for="canvas-height">Canvas Height:</label>
+                <input name="searchTxt" id="canvas-height" value="11" type="number">
+                <button id="canvas-resize">Resize</button>
+            </form>
+        </div>
+        <div class="editor-button-wrapper">
+            <a href="" download="" id="jsonexport" class="editor-button">
+                <img src="assets/export.svg" alt="Export an organism">
+            </a>
+            <a id="jsonimport" class="editor-button">
+                <img src="assets/import.svg" alt="Import an organism">
+                <label for="file">Load organism</label>
+                <input type="file" id="file" accept=".json">
+                <button>Upload</button>
+            </a>
         </div>
     </div>
 </main>
