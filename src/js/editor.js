@@ -14,6 +14,7 @@ import {
   cellSizeInput,
   cellNames,
   colors,
+  eyeDirectionInput,
 } from "./variables.js";
 
 canvas.oncontextmenu = function (event) {
@@ -224,6 +225,9 @@ canvas.addEventListener("mousedown", (event) => {
   cell["loc_col"] = tileY;
   cell["loc_row"] = tileX;
   cell["state"] = {};
+  if (currentCellType == "eye") {
+    cell["direction"] = parseInt(eyeDirectionInput.value);
+  }
   if (event.button == 0) {
     cell["state"] = { name: currentCellType };
     organism.anatomy.cells.push(cell);
@@ -257,6 +261,21 @@ function drawCells() {
     let cellX = cell.loc_row * cellSize + halfGridWidth * 2 * cellSize; // - cameraX
     let cellY = cell.loc_col * cellSize + halfGridHeight * 2 * cellSize; // - cameraY
     ctx.fillRect(cellX, cellY, cellSize, cellSize);
+    if (cell.state.name == "eye") { 
+      ctx.fillStyle = colors["black"];
+      if (cell.direction == 0) {
+        ctx.fillRect(cellX + (0.3 * cellSize), cellY, (0.4*cellSize), cellSize*0.6);
+      }
+      else if (cell.direction == 2) {
+        ctx.fillRect(cellX + (0.3 * cellSize), (cellY + (cellSize*0.4) ), (0.4*cellSize), cellSize*0.6);
+      }
+      else if (cell.direction == 3) {
+        ctx.fillRect(cellX, cellY + (0.3 * cellSize), cellSize*0.6, (0.4*cellSize));
+      }
+      else if (cell.direction == 1) {
+        ctx.fillRect((cellX + (cellSize * 0.4)), cellY + (0.3 * cellSize), cellSize*0.6, (0.4*cellSize));
+      }
+    }
   }
 
   ctx.fillStyle = "#555";
