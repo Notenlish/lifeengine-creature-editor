@@ -4,7 +4,7 @@
 # How to Use
  Just open the editor [here](https://notenlish.github.io/organism-editor/)
 
- Click the cells to choose them. To remove a cell click on the cell with the cross icon.
+ Click the cells to choose them. To remove a cell right-click.
  
  To export an cell just give it a name and then click on the save icon.
  To load one upload the json file.
