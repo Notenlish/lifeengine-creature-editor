@@ -1,4 +1,4 @@
-# organism-editor
+# Organism Editor
  Organism editor for [The Life Engine](https://thelifeengine.net/)
 
 # How to Use
