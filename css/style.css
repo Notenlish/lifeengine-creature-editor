@@ -71,8 +71,8 @@ main {
     gap: 1rem;
 }
 .editor-cellbutton {
-    width: 4rem;
-    height: 4rem;
+    width: 3.5rem;
+    height: 3.5rem;
     border: 2px solid black;
 }
 .editor-cellbutton[data-active] {

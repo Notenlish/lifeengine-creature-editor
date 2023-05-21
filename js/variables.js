@@ -11,6 +11,7 @@ export const mutationInput = document.querySelector("#org-mutation");
 export const canvasWidthInput = document.querySelector("#canvas-width");
 export const canvasHeightInput = document.querySelector("#canvas-height");
 export const cellSizeInput = document.querySelector("#canvas-cellSize");
+export const eyeDirectionInput = document.querySelector("#eye-direction");
 
 export const cellNames = {
     producer: "green",
