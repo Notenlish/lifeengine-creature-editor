@@ -1,25 +1,38 @@
-import {
-  canvas,
-  canvasContainer,
-  ctx,
-  exportBtn,
-  importBtn,
-  resizeBtn,
-  nameInput,
-  foodInput,
-  directionInput,
-  mutationInput,
-  canvasWidthInput,
-  canvasHeightInput,
-  cellSizeInput,
-  cellNames,
-  colors,
-  eyeDirectionInput,
-} from "./variables.js";
+// Variables
 
-canvas.oncontextmenu = function (event) {
-  event.preventDefault(); // disable the right click context menu
-  event.stopPropagation();
+const canvas = document.querySelector("canvas");
+const canvasContainer = document.querySelector(".canvas-container");
+const ctx = canvas.getContext("2d");
+const exportBtn = document.querySelector("#jsonexport");
+const importBtn = document.querySelector("#jsonimport");
+const resizeBtn = document.querySelector("#canvas-resize");
+const nameInput = document.querySelector("#org-name");
+const foodInput = document.querySelector("#org-food");
+const directionInput = document.querySelector("#org-direction");
+const mutationInput = document.querySelector("#org-mutation");
+const canvasWidthInput = document.querySelector("#canvas-width");
+const canvasHeightInput = document.querySelector("#canvas-height");
+const cellSizeInput = document.querySelector("#canvas-cellSize");
+const eyeDirectionInput = document.querySelector("#eye-direction");
+
+const cellNames = {
+    producer: "green",
+    mouth: "orange",
+    killer: "red",
+    mover: "blue",
+    eye: "grey",
+    armor: "purple",
+};
+
+const colors = {
+    orange: "#DEB14D",
+    green: "#15DE59",
+    red: "#F82380",
+    grey: "#B7C1EA",
+    purple: "#7230DB",
+    blue: "#60D4FF",
+    black: "#222",
+    gray: "#333",
 };
 
 let cameraX = 0;
@@ -67,6 +80,8 @@ let organism = {
   flip,
 };
 
+// Functions
+
 function flip(org) {
   for (let i = 0; i < org.anatomy.cells.length; i++) {
     [org.anatomy.cells[i].loc_col, org.anatomy.cells[i].loc_row] = [
@@ -102,9 +117,9 @@ function resizeCanvas(event) {
 
 canvasContainer.addEventListener("wheel", (event) => {
   if (event.deltaY > 0) {
-    zoom += Math.max(event.deltaY * -0.06, 0.06);
+    zoom -= Math.max(event.deltaY * -0.06, 0.06);
   } else if (event.deltaY < 0) {
-    zoom += Math.min(event.deltaY * -0.06, -0.06);
+    zoom -= Math.min(event.deltaY * -0.06, -0.06);
   }
   zoom = Math.min(Math.max(0.125, zoom), 4);
   canvas.style.transform = `scale(${zoom})`;
