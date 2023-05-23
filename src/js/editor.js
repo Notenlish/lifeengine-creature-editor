@@ -232,7 +232,7 @@ function onMouseUp(event) {
 }
 
 canvas.addEventListener("mousedown", event => {
-  if (event.button != 0 || event.button != 2) {
+  if (event.button != 0 && event.button != 2) {
     return;
   }
   let canvasRect = canvas.getBoundingClientRect();
