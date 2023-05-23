@@ -55,7 +55,7 @@ canvas.style.left = `${leftcenter}px`;
 cameraX = -leftcenter;
 cameraY = topcenter;
 
-let modify_cell_stack = [ ]
+// let modify_cell_stack = [ ]
 
 let organism = {
   c: 7, // The Life Engine Parameters
@@ -231,7 +231,7 @@ function onMouseUp(event) {
   document.removeEventListener("mouseup", onMouseUp);
 }
 
-canvas.addEventListener("click", event => {
+canvas.addEventListener("mousedown", event => {
   if (event.button != 0 || event.button != 2) {
     return;
   }
@@ -241,6 +241,7 @@ canvas.addEventListener("click", event => {
   let tileX = Math.round(x / cellSize - 0.5) - Math.round(halfGridWidth * 2);
   let tileY = Math.round(y / cellSize - 0.5) - Math.round(halfGridHeight * 2);
   let modifiedBefore = false;
+  /*
   modify_cell_stack.forEach((cellpos) => {
     if (tileX == cellpos[0] && tileY == cellpos[1]) {
       modifiedBefore = true;
@@ -250,6 +251,7 @@ canvas.addEventListener("click", event => {
   if (modifiedBefore) {
     return;
   }
+  */
   let cell = {};
   cell["loc_col"] = tileY;
   cell["loc_row"] = tileX;
@@ -260,13 +262,13 @@ canvas.addEventListener("click", event => {
   if (event.button == 0) {
     cell["state"] = { name: currentCellType };
     organism.anatomy.cells.push(cell);
-    modify_cell_stack.push([tileX, tileY])
+    // modify_cell_stack.push([tileX, tileY])
   } else if (event.button == 2) {
     for (let i = 0; i < organism.anatomy.cells.length; i++) {
       let c = organism.anatomy.cells[i];
       if (c.loc_col == tileY && c.loc_row == tileX) {
         organism.anatomy.cells.splice(i, 1);
-        modify_cell_stack.push([tileX, tileY])
+        // modify_cell_stack.push([tileX, tileY])
         break;
       }
     }
