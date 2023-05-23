@@ -17,3 +17,4 @@
 
 # Notes
 I hope you like this project, you can even contribute to it if you want!
+You can also give it a star on github.
