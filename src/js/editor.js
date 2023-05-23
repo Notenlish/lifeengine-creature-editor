@@ -264,7 +264,7 @@ canvas.addEventListener("mousedown", event => {
     organism.anatomy.cells.push(cell);
     // modify_cell_stack.push([tileX, tileY])
   } else if (event.button == 2) {
-    for (let i = 0; i < organism.anatomy.cells.length; i++) {
+    for (let i = organism.anatomy.cells.length-1; i > -1; i--) {
       let c = organism.anatomy.cells[i];
       if (c.loc_col == tileY && c.loc_row == tileX) {
         organism.anatomy.cells.splice(i, 1);
