@@ -10,7 +10,7 @@
  To load one upload the json file.
 
 # Contributing
- Clone the repository, run `npm install` and then run `npm start`. Your changes will take effect in the browser tab.
+ Clone the repository, and edit the files. To see your changes you can refresh the page.
 
 # Deploying
  The files are automatically deployed when a new commit is pushed onto the main branch.
