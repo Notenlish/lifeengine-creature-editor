@@ -82,7 +82,7 @@ let organism = {
 
 // Functions
 
-canvas.addEventListener("contextmenu", event => event.preventDefault());
+document.addEventListener("contextmenu", event => event.preventDefault());
 
 function flip(org) {
   for (let i = 0; i < org.anatomy.cells.length; i++) {
