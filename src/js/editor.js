@@ -96,6 +96,17 @@ function flip(org) {
   return org;
 }
 
+// Quick fix for organisms having offset when importing to life engine, see #13 in github 
+function offsetOrganism(org, offset) {
+  for (let i = 0; i < org.anatomy.cells.length; i++) {
+    [org.anatomy.cells[i].loc_col, org.anatomy.cells[i].loc_row] = [
+      org.anatomy.cells[i].loc_row + offset,
+      org.anatomy.cells[i].loc_col + offset,
+    ];
+  }
+  return org;
+}
+
 function ensureOdd(num) {
   if (num % 2 === 0) {
     return num + 1;
@@ -140,6 +151,7 @@ exportBtn.addEventListener("click", (event) => {
   updateOrganism();
   let organismToExport = JSON.parse(JSON.stringify(organism)); // deep copy
   organismToExport = flip(organismToExport);
+  organismToExport = offsetOrganism(organismToExport, 1);
   let dataStr = JSON.stringify(organismToExport);
   let dataUri =
     "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
@@ -166,6 +178,7 @@ function parseFile(event) {
   let json = JSON.parse(str);
   organism = json;
   organism = flip(organism);
+  organism = offsetOrganism(organism, -1);
 
   nameInput.value = organism.species_name;
   foodInput.value = organism.food_collected;
