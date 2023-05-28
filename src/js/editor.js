@@ -5,6 +5,7 @@ const canvasContainer = document.querySelector(".canvas-container");
 const ctx = canvas.getContext("2d");
 const exportBtn = document.querySelector("#jsonexport");
 const importBtn = document.querySelector("#jsonimport");
+const githubBtn = document.querySelector("#opengithub");
 const resizeBtn = document.querySelector("#canvas-resize");
 const nameInput = document.querySelector("#org-name");
 const foodInput = document.querySelector("#org-food");
@@ -58,8 +59,8 @@ cameraY = topcenter;
 // let modify_cell_stack = [ ]
 
 let organism = {
-  c: 7, // The Life Engine Parameters
-  r: 7, // The Life Engine Parameter
+  c: 7, // Don't change these
+  r: 7, // Don't change these
   lifetime: 0,
   food_collected: 0,
   living: true,
@@ -173,6 +174,11 @@ importBtn.addEventListener("click", (event) => {
   file.addEventListener("change", importJson); // Make the file submit the form
 });
 
+githubBtn.addEventListener("click", event => {
+  event.preventDefault();  // Prevents current page from going to the repository
+  window.open(githubBtn.getAttribute("href"), "_blank");  // Opens the repository in a new tab
+});
+
 function parseFile(event) {
   let str = event.target.result;
   let json = JSON.parse(str);
@@ -275,6 +281,7 @@ canvas.addEventListener("mousedown", event => {
   if (event.button == 0) {
     cell["state"] = { name: currentCellType };
     organism.anatomy.cells.push(cell);
+    console.log(organism.anatomy.cells.length);
     // modify_cell_stack.push([tileX, tileY])
   } else if (event.button == 2) {
     for (let i = organism.anatomy.cells.length-1; i > -1; i--) {
