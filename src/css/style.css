@@ -48,7 +48,7 @@ main {
 #jsonimport * {
     display: none;
 }
-#jsonimport img {
+#jsonimport svg, #jsonimport use {
     display: block;
 }
 
