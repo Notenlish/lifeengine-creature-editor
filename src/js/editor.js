@@ -56,8 +56,6 @@ canvas.style.left = `${leftcenter}px`;
 cameraX = -leftcenter;
 cameraY = topcenter;
 
-// let modify_cell_stack = [ ]
-
 let organism = {
   c: 7, // Don't change these
   r: 7, // Don't change these
