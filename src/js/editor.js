@@ -80,22 +80,11 @@ let organism = {
     cells: [],
   },
   species_name: "",
-  flip,
 };
 
 // Functions
 
 canvasContainer.addEventListener("contextmenu", event => event.preventDefault());
-
-function flip(org) {
-  for (let i = 0; i < org.anatomy.cells.length; i++) {
-    [org.anatomy.cells[i].loc_col, org.anatomy.cells[i].loc_row] = [
-      org.anatomy.cells[i].loc_row,
-      org.anatomy.cells[i].loc_col,
-    ];
-  }
-  return org;
-}
 
 // Quick fix for organisms having offset when importing to life engine, see #13 in github 
 function offsetOrganism(org, offset) {
@@ -151,7 +140,6 @@ function updateOrganism() {
 exportBtn.addEventListener("click", (event) => {
   updateOrganism();
   let organismToExport = JSON.parse(JSON.stringify(organism)); // deep copy
-  organismToExport = flip(organismToExport);
   organismToExport = offsetOrganism(organismToExport, 1);
   let dataStr = JSON.stringify(organismToExport);
   let dataUri =
@@ -183,7 +171,6 @@ function parseFile(event) {
   let str = event.target.result;
   let json = JSON.parse(str);
   organism = json;
-  organism = flip(organism);
   organism = offsetOrganism(organism, -1);
 
   nameInput.value = organism.species_name;
