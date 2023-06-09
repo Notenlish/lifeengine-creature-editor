@@ -135,21 +135,32 @@ function updateOrganism() {
   organism.mutability = parseInt(mutationInput.value);
 }
 
+let previousDataUrl = null;
+
 exportBtn.addEventListener("click", (event) => {
   updateOrganism();
   let organismToExport = JSON.parse(JSON.stringify(organism)); // deep copy
   organismToExport = offsetOrganism(organismToExport, 1);
   let dataStr = JSON.stringify(organismToExport);
-  let dataUri =
-    "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
+  
+  let dataBlob = new Blob([dataStr], { type: "application/json" });
+  let dataUrl = URL.createObjectURL(dataBlob);
+
+  if (previousDataUrl) {  
+    URL.revokeObjectURL(previousDataUrl);
+  }
+
   let exportFileDefaultName;
   if (nameInput.value === "") {
     exportFileDefaultName = "organism.json";
   } else {
     exportFileDefaultName = `${nameInput.value}.json`;
   }
-  exportBtn.setAttribute("href", dataUri);
+  
+  exportBtn.setAttribute("href", dataUrl);
   exportBtn.setAttribute("download", exportFileDefaultName);
+
+  previousDataUrl = dataUrl;
 });
 
 let form = document.querySelector("#upload");
