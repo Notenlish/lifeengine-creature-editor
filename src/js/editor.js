@@ -307,8 +307,8 @@ function drawCells() {
     let cell = organism.anatomy.cells[index];
     let colorName = cellNames[cell.state.name];
     ctx.fillStyle = colors[colorName];
-    let cellX = cell.loc_row * cellSize + halfGridWidth * 2 * cellSize; // - cameraX
-    let cellY = cell.loc_col * cellSize + halfGridHeight * 2 * cellSize; // - cameraY
+    let cellX = cell.loc_row * cellSize + halfGridWidth * 2 * cellSize;
+    let cellY = cell.loc_col * cellSize + halfGridHeight * 2 * cellSize;
     ctx.fillRect(cellX, cellY, cellSize, cellSize);
     if (cell.state.name == "eye") { 
       ctx.fillStyle = colors["black"];
@@ -345,17 +345,17 @@ function updateGraph() {
   let bottom_corners = [];
   let left_corners = [];
   let right_corners = [];
-  let startX = 0; // canvas.width % cellSize
+  let startX = 0;
   for (let x = startX; x < canvas.width; x += cellSize) {
     top_corners.push([x, 0]);
     bottom_corners.push([x, canvas.height]);
   }
-  let startY = 0; // canvas.height % cellSize
+  let startY = 0;
   for (let y = startY; y < canvas.height; y += cellSize) {
     left_corners.push([0, y]);
     right_corners.push([canvas.width, y]);
   }
-  ctx.strokeStyle = colors["black"]; // ctx.fillStyle
+  ctx.strokeStyle = colors["black"];
   ctx.beginPath();
   for (let index = 0; index < top_corners.length; index += 1) {
     let coord1;
