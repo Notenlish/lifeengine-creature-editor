@@ -252,28 +252,32 @@ function canvasContainerOnMouseUp(event) {
 }
 
 let modifiedCells = [];
+let eventButtonBefore = NaN;  // pretty ugly solution but works
 // Canvas Drag
 canvas.addEventListener("mousedown", (event) => {
   if (event.button == 1) {
     return;
   }
-  modifyCell(event);
+  modifyCell(event, event.button);
+  eventButtonBefore = event.button;
   document.addEventListener("mousemove", canvasOnMouseMove);
   document.addEventListener("mouseup", canvasOnMouseUp);
 });
 
 function canvasOnMouseMove(event) {
-  modifyCell(event);
+  console.log(event.button);
+  modifyCell(event, eventButtonBefore);
 }
 
 function canvasOnMouseUp(event) {
   modifiedCells = [];
+  eventButtonBefore = NaN;
   document.removeEventListener("mousemove", canvasOnMouseMove);
   document.removeEventListener("mouseup", canvasOnMouseUp);
 }
 
-function modifyCell(event) {
-  if (event.button == 1) {
+function modifyCell(event, button) {
+  if (button == 1) {
     return;
   }
   let canvasRect = canvas.getBoundingClientRect();
@@ -299,7 +303,7 @@ function modifyCell(event) {
   if (currentCellType == "eye") {
     cell["direction"] = parseInt(eyeDirectionInput.value);
   }
-  if (event.button == 0) {
+  if (button == 0) {
     console.log("sol");
     cell["state"] = { name: currentCellType };
     organism.anatomy.cells.push(cell);
@@ -307,7 +311,7 @@ function modifyCell(event) {
     console.log(
       `Added Cell: ${[tileX, tileY]}  length:${organism.anatomy.cells.length}`
     );
-  } else if (event.button == 2) {
+  } else if (button == 2) {
     console.log("sağ");
     for (let i = organism.anatomy.cells.length - 1; i > -1; i--) {
       let c = organism.anatomy.cells[i];
