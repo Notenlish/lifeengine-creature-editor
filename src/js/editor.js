@@ -265,7 +265,6 @@ canvas.addEventListener("mousedown", (event) => {
 });
 
 function canvasOnMouseMove(event) {
-  console.log(event.button);
   modifyCell(event, eventButtonBefore);
 }
 
@@ -304,15 +303,10 @@ function modifyCell(event, button) {
     cell["direction"] = parseInt(eyeDirectionInput.value);
   }
   if (button == 0) {
-    console.log("sol");
     cell["state"] = { name: currentCellType };
     organism.anatomy.cells.push(cell);
     modifiedCells.push([tileX, tileY]);
-    console.log(
-      `Added Cell: ${[tileX, tileY]}  length:${organism.anatomy.cells.length}`
-    );
   } else if (button == 2) {
-    console.log("sağ");
     for (let i = organism.anatomy.cells.length - 1; i > -1; i--) {
       let c = organism.anatomy.cells[i];
       if (c.loc_col == tileY && c.loc_row == tileX) {
