@@ -1,3 +1,5 @@
+"use strict";
+
 // Variables
 
 const canvas = document.querySelector("canvas");
@@ -17,23 +19,23 @@ const cellSizeInput = document.querySelector("#canvas-cellSize");
 const eyeDirectionInput = document.querySelector("#eye-direction");
 
 const cellNames = {
-    producer: "green",
-    mouth: "orange",
-    killer: "red",
-    mover: "blue",
-    eye: "grey",
-    armor: "purple",
+  producer: "green",
+  mouth: "orange",
+  killer: "red",
+  mover: "blue",
+  eye: "grey",
+  armor: "purple",
 };
 
 const colors = {
-    orange: "#DEB14D",
-    green: "#15DE59",
-    red: "#F82380",
-    grey: "#B7C1EA",
-    purple: "#7230DB",
-    blue: "#60D4FF",
-    black: "#222",
-    gray: "#333",
+  orange: "#DEB14D",
+  green: "#15DE59",
+  red: "#F82380",
+  grey: "#B7C1EA",
+  purple: "#7230DB",
+  blue: "#60D4FF",
+  black: "#222",
+  gray: "#333",
 };
 
 let cameraX = 0;
@@ -82,9 +84,11 @@ let organism = {
 
 // Functions
 
-canvasContainer.addEventListener("contextmenu", event => event.preventDefault());
+canvasContainer.addEventListener("contextmenu", (event) =>
+  event.preventDefault()
+);
 
-// Quick fix for organisms having offset when importing to life engine, see #13 in github 
+//
 function offsetOrganism(org, offset) {
   for (let i = 0; i < org.anatomy.cells.length; i++) {
     [org.anatomy.cells[i].loc_col, org.anatomy.cells[i].loc_row] = [
@@ -142,11 +146,11 @@ exportBtn.addEventListener("click", (event) => {
   let organismToExport = JSON.parse(JSON.stringify(organism)); // deep copy
   organismToExport = offsetOrganism(organismToExport, 1);
   let dataStr = JSON.stringify(organismToExport);
-  
+
   let dataBlob = new Blob([dataStr], { type: "application/json" });
   let dataUrl = URL.createObjectURL(dataBlob);
 
-  if (previousDataUrl) {  
+  if (previousDataUrl) {
     URL.revokeObjectURL(previousDataUrl);
   }
 
@@ -156,7 +160,7 @@ exportBtn.addEventListener("click", (event) => {
   } else {
     exportFileDefaultName = `${nameInput.value}.json`;
   }
-  
+
   exportBtn.setAttribute("href", dataUrl);
   exportBtn.setAttribute("download", exportFileDefaultName);
 
@@ -171,9 +175,9 @@ importBtn.addEventListener("click", (event) => {
   file.addEventListener("change", importJson); // Make the file submit the form
 });
 
-githubBtn.addEventListener("click", event => {
-  event.preventDefault();  // Prevents current page from going to the repository
-  window.open(githubBtn.getAttribute("href"), "_blank");  // Opens the repository in a new tab
+githubBtn.addEventListener("click", (event) => {
+  event.preventDefault(); // Prevents current page from going to the repository
+  window.open(githubBtn.getAttribute("href"), "_blank"); // Opens the repository in a new tab
 });
 
 function parseFile(event) {
@@ -199,18 +203,6 @@ function importJson(event) {
   reader.readAsText(file.files[0]);
 }
 
-let dragstartX;
-let dragstartY;
-canvasContainer.addEventListener("mousedown", (event) => {
-  if (event.button != 1) {
-    return;
-  }
-  dragstartX = event.clientX;
-  dragstartY = event.clientY;
-  document.addEventListener("mousemove", onMouseMove);
-  document.addEventListener("mouseup", onMouseUp);
-});
-
 let cellButtons = document.getElementsByClassName("editor-cellbutton");
 for (let i = 0; i < cellButtons.length; i++) {
   let cellButton = cellButtons[i];
@@ -227,27 +219,61 @@ for (let i = 0; i < cellButtons.length; i++) {
   });
 }
 
-function onMouseMove(event) {
+// CanvasContainer Draw
+let canvasContainerDragStartX;
+let canvasContainerDragStartY;
+canvasContainer.addEventListener("mousedown", (event) => {
+  if (event.button != 1) {
+    return;
+  }
+  canvasContainerDragStartX = event.clientX;
+  canvasContainerDragStartY = event.clientY;
+  document.addEventListener("mousemove", canvasContainerOnMouseMove);
+  document.addEventListener("mouseup", canvasContainerOnMouseUp);
+});
+
+function canvasContainerOnMouseMove(event) {
   canvas.style.left = "";
-  let draggedX = event.clientX - dragstartX;
-  let draggedY = event.clientY - dragstartY;
-  dragstartX = event.clientX;
-  dragstartY = event.clientY;
+  let draggedX = event.clientX - canvasContainerDragStartX;
+  let draggedY = event.clientY - canvasContainerDragStartY;
+  canvasContainerDragStartX = event.clientX;
+  canvasContainerDragStartY = event.clientY;
   cameraX -= draggedX;
   cameraY += draggedY;
   canvas.style.top = `${cameraY}px`;
   canvas.style.right = `${cameraX}px`;
 }
 
-function onMouseUp(event) {
-  dragstartX = event.clientX;
-  dragstartY = event.clientY;
-  document.removeEventListener("mousemove", onMouseMove);
-  document.removeEventListener("mouseup", onMouseUp);
+function canvasContainerOnMouseUp(event) {
+  canvasContainerDragStartX = event.clientX;
+  canvasContainerDragStartY = event.clientY;
+  document.removeEventListener("mousemove", canvasContainerOnMouseMove);
+  document.removeEventListener("mouseup", canvasContainerOnMouseUp);
 }
 
-canvas.addEventListener("mousedown", event => {
-  if (event.button != 0 && event.button != 2) {
+let modifiedCells = [];
+// Canvas Drag
+canvas.addEventListener("mousedown", (event) => {
+  if (event.button == 1) {
+    return;
+  }
+  modifyCell(event);
+  document.addEventListener("mousemove", canvasOnMouseMove);
+  document.addEventListener("mouseup", canvasOnMouseUp);
+});
+
+function canvasOnMouseMove(event) {
+  modifyCell(event);
+}
+
+function canvasOnMouseUp(event) {
+  modifiedCells = [];
+  document.removeEventListener("mousemove", canvasOnMouseMove);
+  document.removeEventListener("mouseup", canvasOnMouseUp);
+}
+
+function modifyCell(event) {
+  if (event.button == 1) {
     return;
   }
   let canvasRect = canvas.getBoundingClientRect();
@@ -255,18 +281,17 @@ canvas.addEventListener("mousedown", event => {
   let y = (event.clientY - canvasRect.top) / zoom;
   let tileX = Math.round(x / cellSize - 0.5) - Math.round(halfGridWidth * 2);
   let tileY = Math.round(y / cellSize - 0.5) - Math.round(halfGridHeight * 2);
-  let modifiedBefore = false;
-  /*
-  modify_cell_stack.forEach((cellpos) => {
-    if (tileX == cellpos[0] && tileY == cellpos[1]) {
-      modifiedBefore = true;
-      return;
-    }
-  });
-  if (modifiedBefore) {
+
+  // modified the cell before
+  let tilePos = [tileX, tileY];
+  if (
+    modifiedCells.some(
+      (cell) => cell[0] === tilePos[0] && cell[1] === tilePos[1]
+    )
+  ) {
     return;
   }
-  */
+
   let cell = {};
   cell["loc_col"] = tileY;
   cell["loc_row"] = tileX;
@@ -275,23 +300,27 @@ canvas.addEventListener("mousedown", event => {
     cell["direction"] = parseInt(eyeDirectionInput.value);
   }
   if (event.button == 0) {
+    console.log("sol");
     cell["state"] = { name: currentCellType };
     organism.anatomy.cells.push(cell);
-    console.log(organism.anatomy.cells.length);
-    // modify_cell_stack.push([tileX, tileY])
+    modifiedCells.push([tileX, tileY]);
+    console.log(
+      `Added Cell: ${[tileX, tileY]}  length:${organism.anatomy.cells.length}`
+    );
   } else if (event.button == 2) {
-    for (let i = organism.anatomy.cells.length-1; i > -1; i--) {
+    console.log("sağ");
+    for (let i = organism.anatomy.cells.length - 1; i > -1; i--) {
       let c = organism.anatomy.cells[i];
       if (c.loc_col == tileY && c.loc_row == tileX) {
         organism.anatomy.cells.splice(i, 1);
-        // modify_cell_stack.push([tileX, tileY])
+        modifiedCells.push([tileX, tileY]);
         break;
       }
     }
   }
   drawCells();
   updateGraph();
-});
+}
 
 function drawCells() {
   ctx.fillStyle = "white";
@@ -310,19 +339,36 @@ function drawCells() {
     let cellX = cell.loc_row * cellSize + halfGridWidth * 2 * cellSize;
     let cellY = cell.loc_col * cellSize + halfGridHeight * 2 * cellSize;
     ctx.fillRect(cellX, cellY, cellSize, cellSize);
-    if (cell.state.name == "eye") { 
+    if (cell.state.name == "eye") {
       ctx.fillStyle = colors["black"];
       if (cell.direction == 0) {
-        ctx.fillRect(cellX + (0.3 * cellSize), cellY, (0.4*cellSize), cellSize*0.6);
-      }
-      else if (cell.direction == 2) {
-        ctx.fillRect(cellX + (0.3 * cellSize), (cellY + (cellSize*0.4) ), (0.4*cellSize), cellSize*0.6);
-      }
-      else if (cell.direction == 3) {
-        ctx.fillRect(cellX, cellY + (0.3 * cellSize), cellSize*0.6, (0.4*cellSize));
-      }
-      else if (cell.direction == 1) {
-        ctx.fillRect((cellX + (cellSize * 0.4)), cellY + (0.3 * cellSize), cellSize*0.6, (0.4*cellSize));
+        ctx.fillRect(
+          cellX + 0.3 * cellSize,
+          cellY,
+          0.4 * cellSize,
+          cellSize * 0.6
+        );
+      } else if (cell.direction == 2) {
+        ctx.fillRect(
+          cellX + 0.3 * cellSize,
+          cellY + cellSize * 0.4,
+          0.4 * cellSize,
+          cellSize * 0.6
+        );
+      } else if (cell.direction == 3) {
+        ctx.fillRect(
+          cellX,
+          cellY + 0.3 * cellSize,
+          cellSize * 0.6,
+          0.4 * cellSize
+        );
+      } else if (cell.direction == 1) {
+        ctx.fillRect(
+          cellX + cellSize * 0.4,
+          cellY + 0.3 * cellSize,
+          cellSize * 0.6,
+          0.4 * cellSize
+        );
       }
     }
   }
