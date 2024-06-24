@@ -2,7 +2,7 @@
  Organism editor for [The Life Engine](https://thelifeengine.net/)
 
 # How to Use
- Just open the editor [here](https://notenlish.github.io/life-engine-creature-editor/)
+ Just open the editor [here](https://notenlish.github.io/lifeengine-creature-editor/)
 
  Click the cells to choose them. To remove a cell right-click.
  
